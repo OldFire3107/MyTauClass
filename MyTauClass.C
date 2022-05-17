@@ -17,34 +17,6 @@ using namespace std;
 
 void MyTauClass::Loop(TString fno, const char* fileo="files/histos_")
 {
-  // made with tau->MakeClass("MyTauClass")
-  // to run it: 
-  // .L MyTauClass.C++
-  // MyTauClass aa
-  // aa.Loop()
-//   In a ROOT session, you can do:
-//      root> .L MyTauClass.C
-//      root> MyTauClass t
-//      root> t.GetEntry(12); // Fill t data members with entry number 12
-//      root> t.Show();       // Show values of entry 12
-//      root> t.Show(16);     // Read and show values of entry 16
-//      root> t.Loop();       // Loop on all entries
-//
-
-//     This is the loop skeleton where:
-//    jentry is the global entry number in the chain
-//    ientry is the entry number in the current Tree
-//  Note that the argument to GetEntry must be:
-//    jentry for TChain::GetEntry
-//    ientry for TTree::GetEntry and TBranch::GetEntry
-//
-//       To read only selected branches, Insert statements like:
-// METHOD1:
-//    fChain->SetBranchStatus("*",0);  // disable all branches
-//    fChain->SetBranchStatus("branchname",1);  // activate branchname
-// METHOD2: replace line
-//    fChain->GetEntry(jentry);       //read all branches
-//by  b_branchname->GetEntry(ientry); //read only this branch
   if (fChain == 0) return;
   Int_t ievent=0;
 
@@ -235,6 +207,7 @@ void MyTauClass::Loop(TString fno, const char* fileo="files/histos_")
       }
 
     } // end loop on events
+
     TString fileout = fileo;
     fileout += fno;
     fileout += ".root";
@@ -344,7 +317,7 @@ float deltaPhi(float phi1, float phi2) {
 
 void MyTauClass::MegaLoop(const char *str)
 {
-  
+  gSystem->Exec("mkdir files");
   TSystemDirectory dir(str, str); 
   TList *files = dir.GetListOfFiles(); 
   if (files) { 
