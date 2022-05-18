@@ -855,6 +855,8 @@ public :
    TBranch        *b_JpsiTau_perEVT_mc;   //!
    TBranch        *b_JpsiTau_perEVT_data;   //!
 
+   TString        FileNameIn;
+
    MyTauClass();
    MyTauClass(TTree *tree);
    MyTauClass(const char *file);
@@ -868,6 +870,7 @@ public :
    virtual void     MegaLoop(const char *str);
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
+   virtual void     SwapValue(Float_t &a, Float_t &b);
 };
 
 #endif
@@ -894,6 +897,7 @@ MyTauClass::MyTauClass(TTree *tree) : fChain(0)
 MyTauClass::MyTauClass(const char *str) : fChain(0) 
 {
 // Overloads the previous function to open a tree
+   FileNameIn = str;
    TFile* file = new TFile(str);
    TTree *tree=NULL;
 
