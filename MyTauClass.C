@@ -29,7 +29,7 @@ void MyTauClass::Loop(TString fno, const char* fileo="files/histos_")
   Float_t pi_pt[3];
   Float_t pi_eta[3];
   Float_t pi_phi[3];
-  TTree *tree1 = new TTree("gen_triplet","gen_triplet");
+  TTree *tree1 = new TTree("triplet","triplet");
   tree1->Branch("pi1_pt", &pi_pt[0], "pi1_pt/F");
   tree1->Branch("pi2_pt", &pi_pt[1], "pi2_pt/F");
   tree1->Branch("pi3_pt", &pi_pt[2], "pi3_pt/F");
@@ -40,21 +40,21 @@ void MyTauClass::Loop(TString fno, const char* fileo="files/histos_")
   tree1->Branch("pi2_phi", &pi_phi[1], "pi2_phi/F");
   tree1->Branch("pi3_phi", &pi_phi[2], "pi3_phi/F");
 
-  Float_t pir_pt[3];
-  Float_t pir_eta[3];
-  Float_t pir_phi[3];
-  Bool_t pi_flag;
-  TTree *tree2 = new TTree("reco_triplet","reco_triplet");
-  tree2->Branch("pi1r_pt", &pir_pt[0], "pi1r_pt/F");
-  tree2->Branch("pi2r_pt", &pir_pt[1], "pi2r_pt/F");
-  tree2->Branch("pi3r_pt", &pir_pt[2], "pi3r_pt/F");
-  tree2->Branch("pi1r_eta", &pir_eta[0], "pi1r_eta/F");
-  tree2->Branch("pi2r_eta", &pir_eta[1], "pi2r_eta/F");
-  tree2->Branch("pi3r_eta", &pir_eta[2], "pi3r_eta/F");
-  tree2->Branch("pi1r_phi", &pir_phi[0], "pi1r_phi/F");
-  tree2->Branch("pi2r_phi", &pir_phi[1], "pi2r_phi/F");
-  tree2->Branch("pi3r_phi", &pir_phi[2], "pi3r_phi/F");
-  tree2->Branch("flag", &pi_flag, "flag/O");
+  // Float_t pir_pt[3];
+  // Float_t pir_eta[3];
+  // Float_t pir_phi[3];
+  // Bool_t pi_flag;
+  // TTree *tree1 = new TTree("reco_triplet","reco_triplet");
+  tree1->Branch("pi1r_pt", &pir_pt[0], "pi1r_pt/F");
+  tree1->Branch("pi2r_pt", &pir_pt[1], "pi2r_pt/F");
+  tree1->Branch("pi3r_pt", &pir_pt[2], "pi3r_pt/F");
+  tree1->Branch("pi1r_eta", &pir_eta[0], "pi1r_eta/F");
+  tree1->Branch("pi2r_eta", &pir_eta[1], "pi2r_eta/F");
+  tree1->Branch("pi3r_eta", &pir_eta[2], "pi3r_eta/F");
+  tree1->Branch("pi1r_phi", &pir_phi[0], "pi1r_phi/F");
+  tree1->Branch("pi2r_phi", &pir_phi[1], "pi2r_phi/F");
+  tree1->Branch("pi3r_phi", &pir_phi[2], "pi3r_phi/F");
+  tree1->Branch("flag", &pi_flag, "flag/O");
 
   //f->Close();
   
@@ -153,7 +153,8 @@ void MyTauClass::Loop(TString fno, const char* fileo="files/histos_")
           float dr = pow(eta[0]-eta[1], 2) + pow(phi[0]-phi[1], 2);
           max_dr = max_dr < dr ? dr : max_dr;
           dr = pow(eta[1]-eta[2], 2) + pow(phi[1]-phi[2], 2);
-          max_dr = max_dr < dr ? dr : max_dr;
+          max_dr = max_dr <
+            pi_flag = false; dr ? dr : max_dr;
           dr = pow(eta[2]-eta[0], 2) + pow(phi[2]-phi[0], 2);
           max_dr = max_dr < dr ? dr : max_dr;
           max_dr = TMath::Sqrt(max_dr);
@@ -199,7 +200,8 @@ void MyTauClass::Loop(TString fno, const char* fileo="files/histos_")
       SwapValue(pi_phi[1], pi_phi[2]);
     }
     
-
+    Float_t dR_min = 40;
+    int min_pos = -1;
     for(int i=0; i < JpsiTau_tau_pi1_pt->size(); i++){
       h1pt1->Fill(JpsiTau_tau_pi1_pt->at(i));
       h1pt2->Fill(JpsiTau_tau_pi2_pt->at(i));
@@ -219,18 +221,40 @@ void MyTauClass::Loop(TString fno, const char* fileo="files/histos_")
       {
         pi_flag = true;
         Float_t dR = 0;
+        Float_t dR_sum = 0;
         for(int j=0; j < 3; j++)
         {
           dR = TMath::Sqrt(pow(pi_eta[j]-pir_eta[j],2)+pow(pi_phi[j]-pir_phi[j],2));
-          if (dR > 40)
+          dR_sum += dR;
+          if (dR > 0.1)
           {
-            pi_flag = false;
             break;
           }
         }
+        if(dR_sum < dR_min)
+        {
+          dR_min = dR_sum;
+          min_pos = i;
+        }
       }
-      if(pi_flag == true)
-        tree2->Fill();
+    }
+
+    if(JpsiTau_gen_tau_nprong->size()!=0 && int(JpsiTau_gen_tau_nprong->at(0) == 3))
+    {
+      for(int i=0; i < JpsiTau_tau_pi1_pt->size(); i++){
+        pir_pt[0] = JpsiTau_tau_pi1_pt->at(i);
+        pir_pt[1] = JpsiTau_tau_pi2_pt->at(i);
+        pir_pt[2] = JpsiTau_tau_pi3_pt->at(i);
+        pir_eta[0] = JpsiTau_tau_pi1_eta->at(i);
+        pir_eta[1] = JpsiTau_tau_pi2_eta->at(i);
+        pir_eta[2] = JpsiTau_tau_pi3_eta->at(i);
+        pir_phi[0] = JpsiTau_tau_pi1_phi->at(i);
+        pir_phi[1] = JpsiTau_tau_pi2_phi->at(i);
+        pir_phi[2] = JpsiTau_tau_pi3_phi->at(i);
+        if(i == min_pos) pi_flag = true; else pi_flag = false;
+
+        tree1->Fill();
+      }
     }
 
     // sinec above 1 prong and 2 prong messeages were never printed it is
@@ -288,11 +312,9 @@ void MyTauClass::Loop(TString fno, const char* fileo="files/histos_")
   h2etaphi->Write();
   h2dRpt->Write();
   tree1->Write();
-  tree2->Write();
   f->Close();
   delete f;
   delete tree1;
-  delete tree2;
 }
 
 /*
