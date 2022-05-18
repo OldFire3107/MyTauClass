@@ -16,7 +16,7 @@
 
 using namespace std;
 
-void MyTauClass::Loop(TString fno, const char* fileo="files/histos_")
+void MyTauClass::Loop()
 {
   if (fChain == 0) return;
   Int_t ievent=0;
@@ -24,37 +24,6 @@ void MyTauClass::Loop(TString fno, const char* fileo="files/histos_")
   Long64_t nentries = fChain->GetEntriesFast();
 
   Long64_t nbytes = 0, nb = 0;
-
-// The tree
-  Float_t pi_pt[3];
-  Float_t pi_eta[3];
-  Float_t pi_phi[3];
-  TTree *tree1 = new TTree("triplet","triplet");
-  tree1->Branch("pi1_pt", &pi_pt[0], "pi1_pt/F");
-  tree1->Branch("pi2_pt", &pi_pt[1], "pi2_pt/F");
-  tree1->Branch("pi3_pt", &pi_pt[2], "pi3_pt/F");
-  tree1->Branch("pi1_eta", &pi_eta[0], "pi1_eta/F");
-  tree1->Branch("pi2_eta", &pi_eta[1], "pi2_eta/F");
-  tree1->Branch("pi3_eta", &pi_eta[2], "pi3_eta/F");
-  tree1->Branch("pi1_phi", &pi_phi[0], "pi1_phi/F");
-  tree1->Branch("pi2_phi", &pi_phi[1], "pi2_phi/F");
-  tree1->Branch("pi3_phi", &pi_phi[2], "pi3_phi/F");
-
-  // Float_t pir_pt[3];
-  // Float_t pir_eta[3];
-  // Float_t pir_phi[3];
-  // Bool_t pi_flag;
-  // TTree *tree1 = new TTree("reco_triplet","reco_triplet");
-  tree1->Branch("pi1r_pt", &pir_pt[0], "pi1r_pt/F");
-  tree1->Branch("pi2r_pt", &pir_pt[1], "pi2r_pt/F");
-  tree1->Branch("pi3r_pt", &pir_pt[2], "pi3r_pt/F");
-  tree1->Branch("pi1r_eta", &pir_eta[0], "pi1r_eta/F");
-  tree1->Branch("pi2r_eta", &pir_eta[1], "pi2r_eta/F");
-  tree1->Branch("pi3r_eta", &pir_eta[2], "pi3r_eta/F");
-  tree1->Branch("pi1r_phi", &pir_phi[0], "pi1r_phi/F");
-  tree1->Branch("pi2r_phi", &pir_phi[1], "pi2r_phi/F");
-  tree1->Branch("pi3r_phi", &pir_phi[2], "pi3r_phi/F");
-  tree1->Branch("flag", &pi_flag, "flag/O");
 
   //f->Close();
   
@@ -290,7 +259,7 @@ void MyTauClass::Loop(TString fno, const char* fileo="files/histos_")
   fileout += fno;
   fileout += ".root";
 
-  TFile *f = new TFile(fileout, "RECREATE");
+  TFile *f = new TFile(fileout, "UPDATE");
   h1pttau->Write();
   h1etatau->Write();
   h1phitau->Write(); 
@@ -314,7 +283,6 @@ void MyTauClass::Loop(TString fno, const char* fileo="files/histos_")
   tree1->Write();
   f->Close();
   delete f;
-  delete tree1;
 }
 
 /*
@@ -351,7 +319,14 @@ void MyTauClass::MegaLoop(const char *str)
 
         FileNameIn = filename;
 
-  
+        const char* fileo="files/histos_";
+        TString fileout = fileo;
+        fileout += fname;
+        fileout += ".root";
+
+        TFile *f = new TFile(fileout, "RECREATE");
+        TTree *tree1=NULL;
+        InitOut(tree1);
 
         TFile* file = new TFile(filename);
         TTree *tree=NULL;
@@ -362,6 +337,7 @@ void MyTauClass::MegaLoop(const char *str)
         Init(tree);
         Loop(fname);
         delete tree;
+        delete tree1;
       }
     }
   }

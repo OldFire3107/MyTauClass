@@ -856,16 +856,24 @@ public :
    TBranch        *b_JpsiTau_perEVT_data;   //!
 
    TString        FileNameIn;
+   Float_t        pi_pt[3];
+   Float_t        pi_eta[3];
+   Float_t        pi_phi[3];
+   Float_t        pir_pt[3];
+   Float_t        pir_eta[3];
+   Float_t        pir_phi[3];
+   Bool_t         pi_flag;
 
    MyTauClass();
-   MyTauClass(TTree *tree);
+   // MyTauClass(TTree *tree);
    MyTauClass(const char *file);
    virtual ~MyTauClass();
    virtual Int_t    Cut(Long64_t entry);
    virtual Int_t    GetEntry(Long64_t entry);
    virtual Long64_t LoadTree(Long64_t entry);
    virtual void     Init(TTree *tree);
-   virtual void     Loop(TString, const char*);
+   virtual void     InitOut(TTree *tree1);
+   virtual void     Loop();
    virtual void     show(const char*);
    virtual void     MegaLoop(const char *str);
    virtual Bool_t   Notify();
@@ -887,12 +895,12 @@ MyTauClass::MyTauClass() : fChain(0)
    // dir->GetObject("tree",tree);
 }
 
-MyTauClass::MyTauClass(TTree *tree) : fChain(0) 
-{
-// if parameter tree is not specified (or zero), connect the file
-// used to generate this class and read the Tree.
-   Init(tree);
-}
+// MyTauClass::MyTauClass(TTree *tree) : fChain(0) 
+// {
+// // if parameter tree is not specified (or zero), connect the file
+// // used to generate this class and read the Tree.
+//    Init(tree);
+// }
 
 MyTauClass::MyTauClass(const char *str) : fChain(0) 
 {
@@ -930,6 +938,35 @@ Long64_t MyTauClass::LoadTree(Long64_t entry)
       Notify();
    }
    return centry;
+}
+
+void MyTauCLass::InitOut(TTree *tree1)
+{
+
+// The tree
+   *tree1 = new TTree("triplet","triplet");
+   tree1->Branch("pi1_pt", &pi_pt[0], "pi1_pt/F");
+   tree1->Branch("pi2_pt", &pi_pt[1], "pi2_pt/F");
+   tree1->Branch("pi3_pt", &pi_pt[2], "pi3_pt/F");
+   tree1->Branch("pi1_eta", &pi_eta[0], "pi1_eta/F");
+   tree1->Branch("pi2_eta", &pi_eta[1], "pi2_eta/F");
+   tree1->Branch("pi3_eta", &pi_eta[2], "pi3_eta/F");
+   tree1->Branch("pi1_phi", &pi_phi[0], "pi1_phi/F");
+   tree1->Branch("pi2_phi", &pi_phi[1], "pi2_phi/F");
+   tree1->Branch("pi3_phi", &pi_phi[2], "pi3_phi/F");
+
+
+   // TTree *tree1 = new TTree("reco_triplet","reco_triplet");
+   tree1->Branch("pi1r_pt", &pir_pt[0], "pi1r_pt/F");
+   tree1->Branch("pi2r_pt", &pir_pt[1], "pi2r_pt/F");
+   tree1->Branch("pi3r_pt", &pir_pt[2], "pi3r_pt/F");
+   tree1->Branch("pi1r_eta", &pir_eta[0], "pi1r_eta/F");
+   tree1->Branch("pi2r_eta", &pir_eta[1], "pi2r_eta/F");
+   tree1->Branch("pi3r_eta", &pir_eta[2], "pi3r_eta/F");
+   tree1->Branch("pi1r_phi", &pir_phi[0], "pi1r_phi/F");
+   tree1->Branch("pi2r_phi", &pir_phi[1], "pi2r_phi/F");
+   tree1->Branch("pi3r_phi", &pir_phi[2], "pi3r_phi/F");
+   tree1->Branch("flag", &pi_flag, "flag/O");
 }
 
 void MyTauClass::Init(TTree *tree)
