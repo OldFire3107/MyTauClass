@@ -14,6 +14,7 @@ using namespace std;
 
 void MyTauClass::Loop()
 {
+  // FileIn->cd();
   if (fChain == 0) return;
   Int_t ievent=0;
 
@@ -133,61 +134,72 @@ void MyTauClass::Loop()
     int min_pos = -1;
 
     vector<Int_t*> num_comb;
-    Int_t num_comb_min[3] = {0, 1, 2};
+    Int_t num_comb_min[3] = {-1, -1, -1};
+    Int_t input[3] = {0, 1, 2};
+    CombAdd(num_comb, input, 3);
 
+    for(const auto& in: num_comb){
+      for(int i=0; i < JpsiTau_tau_pi1_pt->size(); i++){
+        h1pt1->Fill(JpsiTau_tau_pi1_pt->at(i));
+        h1pt2->Fill(JpsiTau_tau_pi2_pt->at(i));
+        h1pt3->Fill(JpsiTau_tau_pi3_pt->at(i));
+        pir_pt[in[0]] = JpsiTau_tau_pi1_pt->at(i);
+        pir_pt[in[1]] = JpsiTau_tau_pi2_pt->at(i);
+        pir_pt[in[2]] = JpsiTau_tau_pi3_pt->at(i);
+        pir_eta[in[0]] = JpsiTau_tau_pi1_eta->at(i);
+        pir_eta[in[1]] = JpsiTau_tau_pi2_eta->at(i);
+        pir_eta[in[2]] = JpsiTau_tau_pi3_eta->at(i);
+        pir_phi[in[0]] = JpsiTau_tau_pi1_phi->at(i);
+        pir_phi[in[1]] = JpsiTau_tau_pi2_phi->at(i);
+        pir_phi[in[2]] = JpsiTau_tau_pi3_phi->at(i);
+        pi_flag = false;
 
-    for(int i=0; i < JpsiTau_tau_pi1_pt->size(); i++){
-      h1pt1->Fill(JpsiTau_tau_pi1_pt->at(i));
-      h1pt2->Fill(JpsiTau_tau_pi2_pt->at(i));
-      h1pt3->Fill(JpsiTau_tau_pi3_pt->at(i));
-      pir_pt[0] = JpsiTau_tau_pi1_pt->at(i);
-      pir_pt[1] = JpsiTau_tau_pi2_pt->at(i);
-      pir_pt[2] = JpsiTau_tau_pi3_pt->at(i);
-      pir_eta[0] = JpsiTau_tau_pi1_eta->at(i);
-      pir_eta[1] = JpsiTau_tau_pi2_eta->at(i);
-      pir_eta[2] = JpsiTau_tau_pi3_eta->at(i);
-      pir_phi[0] = JpsiTau_tau_pi1_phi->at(i);
-      pir_phi[1] = JpsiTau_tau_pi2_phi->at(i);
-      pir_phi[2] = JpsiTau_tau_pi3_phi->at(i);
-      pi_flag = false;
-
-      if(JpsiTau_gen_tau_nprong->size()!=0 && int(JpsiTau_gen_tau_nprong->at(0) == 3))
-      {
-        pi_flag = true;
-        Float_t dR = 0;
-        Float_t dR_sum = 0;
-        for(int j=0; j < 3; j++)
+        if(JpsiTau_gen_tau_nprong->size()!=0 && int(JpsiTau_gen_tau_nprong->at(0) == 3))
         {
-          dR = TMath::Sqrt(pow(pi_eta[j]-pir_eta[j],2)+pow(pi_phi[j]-pir_phi[j],2));
-          dR_sum += dR;
-          if (dR > 0.1)
+          pi_flag = true;
+          Float_t dR = 0;
+          Float_t dR_sum = 0;
+          for(int j=0; j < 3; j++)
           {
-            break;
+            dR = TMath::Sqrt(pow(pi_eta[j]-pir_eta[j],2)+pow(pi_phi[j]-pir_phi[j],2));
+            dR_sum += dR;
+            if (dR > 0.1)
+            {
+              break;
+            }
           }
-        }
-        if(dR_sum < dR_min)
-        {
-          dR_min = dR_sum;
-          min_pos = i;
+          if(dR_sum < dR_min)
+          {
+            dR_min = dR_sum;
+            min_pos = i;
+            num_comb_min[0]=in[0];
+            num_comb_min[1]=in[1];
+            num_comb_min[2]=in[2];
+          }
         }
       }
     }
 
     if(JpsiTau_gen_tau_nprong->size()!=0 && int(JpsiTau_gen_tau_nprong->at(0) == 3))
     {
-      for(int i=0; i < JpsiTau_tau_pi1_pt->size(); i++){
-        pir_pt[0] = JpsiTau_tau_pi1_pt->at(i);
-        pir_pt[1] = JpsiTau_tau_pi2_pt->at(i);
-        pir_pt[2] = JpsiTau_tau_pi3_pt->at(i);
-        pir_eta[0] = JpsiTau_tau_pi1_eta->at(i);
-        pir_eta[1] = JpsiTau_tau_pi2_eta->at(i);
-        pir_eta[2] = JpsiTau_tau_pi3_eta->at(i);
-        pir_phi[0] = JpsiTau_tau_pi1_phi->at(i);
-        pir_phi[1] = JpsiTau_tau_pi2_phi->at(i);
-        pir_phi[2] = JpsiTau_tau_pi3_phi->at(i);
-        if(i == min_pos) pi_flag = true; else pi_flag = false;
+      for(const auto& in: num_comb){
+        for(int i=0; i < JpsiTau_tau_pi1_pt->size(); i++){
+          pir_pt[in[0]] = JpsiTau_tau_pi1_pt->at(i);
+          pir_pt[in[1]] = JpsiTau_tau_pi2_pt->at(i);
+          pir_pt[in[2]] = JpsiTau_tau_pi3_pt->at(i);
+          pir_eta[in[0]] = JpsiTau_tau_pi1_eta->at(i);
+          pir_eta[in[1]] = JpsiTau_tau_pi2_eta->at(i);
+          pir_eta[in[2]] = JpsiTau_tau_pi3_eta->at(i);
+          pir_phi[in[0]] = JpsiTau_tau_pi1_phi->at(i);
+          pir_phi[in[1]] = JpsiTau_tau_pi2_phi->at(i);
+          pir_phi[in[2]] = JpsiTau_tau_pi3_phi->at(i);
+          if(i == min_pos && in[0] == num_comb_min[0] && in[1] == num_comb_min[1] && in[2] == num_comb_min[2]) 
+            pi_flag = true; 
+          else 
+            pi_flag = false;
 
-        tree1->Fill();
+          tree1->Fill();
+        }
       }
     }
 
@@ -219,28 +231,28 @@ void MyTauClass::Loop()
 
   } // end loop on events
 
-  FileOut->cd();
-  h1pttau->Write();
-  h1etatau->Write();
-  h1phitau->Write(); 
-  h1nprongtau->Write();
-  h1nmatchedtau->Write();
-  h1ptpi->Write();
-  h1etapi->Write();
-  h1phipi->Write();
-  h1pt1->Write();
-  h1pt2->Write();
-  h1pt3->Write();
-  h1ratio->Write();
-  h15pt->Write();
-  h110pt->Write();
-  h120pt->Write();
-  h1expt->Write();
-  h2etapt->Write();
-  h2phipt->Write();
-  h2etaphi->Write();
-  h2dRpt->Write();
-  tree1->Write();
+  // h1pttau->Write();
+  // h1etatau->Write();
+  // h1phitau->Write(); 
+  // h1nprongtau->Write();
+  // h1nmatchedtau->Write();
+  // h1ptpi->Write();
+  // h1etapi->Write();
+  // h1phipi->Write();
+  // h1pt1->Write();
+  // h1pt2->Write();
+  // h1pt3->Write();
+  // h1ratio->Write();
+  // h15pt->Write();
+  // h110pt->Write();
+  // h120pt->Write();
+  // h1expt->Write();
+  // h2etapt->Write();
+  // h2phipt->Write();
+  // h2etaphi->Write();
+  // h2dRpt->Write();
+  // tree1->Write();
+  // tree1->Draw();
 }
 
 /*
@@ -443,7 +455,7 @@ void MyTauClass::SwapValue(Float_t &a, Float_t &b)
   b = t;
 }
 
-void MyTauClass::CombAdd(vector<Int_t*>& comb, Int_t arr[3], int n=3)
+void MyTauClass::CombAdd(vector<Int_t*>& comb, Int_t arr[3], int n)
 {
   sort(arr, arr+n);
 

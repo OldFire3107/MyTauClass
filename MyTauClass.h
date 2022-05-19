@@ -860,9 +860,9 @@ public :
    TBranch        *b_JpsiTau_perEVT_data;   //!
 
    TString        FileNameIn;
-   TFile          *FileIn;
+   TFile          *FileIn=NULL;
    TString        FileNameOut;
-   TFile          *FileOut;
+   TFile          *FileOut=NULL;
    Float_t        pi_pt[3];
    Float_t        pi_eta[3];
    Float_t        pi_phi[3];
@@ -873,32 +873,32 @@ public :
    TTree          *tree1 = NULL;
 
    // Book here my histograms
-   TH1F *h1pttau;
-   TH1F *h1etatau;
-   TH1F *h1phitau;
-   TH1F *h1nprongtau;
-   TH1F *h1nmatchedtau;
+   TH1F *h1pttau=NULL;
+   TH1F *h1etatau=NULL;
+   TH1F *h1phitau=NULL;
+   TH1F *h1nprongtau=NULL;
+   TH1F *h1nmatchedtau=NULL;
 
-   TH1F *h1ptpi;
-   TH1F *h1etapi;
-   TH1F *h1phipi;
+   TH1F *h1ptpi=NULL;
+   TH1F *h1etapi=NULL;
+   TH1F *h1phipi=NULL;
    
 
-   TH1F *h1pt1;
-   TH1F *h1pt2;
-   TH1F *h1pt3;
+   TH1F *h1pt1=NULL;
+   TH1F *h1pt2=NULL;
+   TH1F *h1pt3=NULL;
 
-   TH1F *h1ratio;
-   TH1F *h15pt;
-   TH1F *h110pt;
-   TH1F *h120pt;
-   TH1F *h1expt;
+   TH1F *h1ratio=NULL;
+   TH1F *h15pt=NULL;
+   TH1F *h110pt=NULL;
+   TH1F *h120pt=NULL;
+   TH1F *h1expt=NULL;
 
    // PART 2
-   TH2F *h2etapt;
-   TH2F *h2phipt;
-   TH2F *h2etaphi;
-   TH2F *h2dRpt;
+   TH2F *h2etapt=NULL;
+   TH2F *h2phipt=NULL;
+   TH2F *h2etaphi=NULL;
+   TH2F *h2dRpt=NULL;
 
    MyTauClass();
    // MyTauClass(TTree *tree);
@@ -915,7 +915,7 @@ public :
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
    virtual void     SwapValue(Float_t &a, Float_t &b);
-   virtual void     CombAdd(vector<Int_t*>&, Int_t[], int);
+   virtual void     CombAdd(vector<Int_t*>& comb, Int_t arr[3], int n=3);
 };
 
 #endif
@@ -948,10 +948,12 @@ MyTauClass::MyTauClass(const char *str, TString fname) : fChain(0)
    fileout += ".root";
    FileNameOut = fileout;
 
+   if(FileOut) delete FileOut;
    TFile *FileOut = new TFile(fileout, "RECREATE");
    tree1=NULL;
    InitOut();
 
+   if(FileIn) delete FileIn;
    FileNameIn = str;
    FileIn = new TFile(str);
    TTree *tree=NULL;
@@ -964,6 +966,31 @@ MyTauClass::MyTauClass(const char *str, TString fname) : fChain(0)
 
 MyTauClass::~MyTauClass()
 {
+   delete h1pttau;
+   delete h1etatau;
+   delete h1phitau;
+   delete h1nprongtau;
+   delete h1nmatchedtau;
+
+   delete h1ptpi;
+   delete h1etapi;
+   delete h1phipi;
+   
+
+   delete h1pt1;
+   delete h1pt2;
+   delete h1pt3;
+
+   delete h1ratio;
+   delete h15pt;
+   delete h110pt;
+   delete h120pt;
+   delete h1expt;
+
+   delete tree1;
+   delete FileIn;
+   delete FileOut;
+
    if (!fChain) return;
    delete fChain->GetCurrentFile();
 }
@@ -991,6 +1018,8 @@ void MyTauClass::InitOut()
 {
 
 // The tree
+   if (tree1) delete tree1;
+
    tree1 = new TTree("triplet","triplet");
    tree1->Branch("pi1_pt", &pi_pt[0], "pi1_pt/F");
    tree1->Branch("pi2_pt", &pi_pt[1], "pi2_pt/F");
