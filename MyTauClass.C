@@ -230,28 +230,28 @@ void MyTauClass::Loop()
 
   } // end loop on events
 
-  // h1pttau->Write();
-  // h1etatau->Write();
-  // h1phitau->Write(); 
-  // h1nprongtau->Write();
-  // h1nmatchedtau->Write();
-  // h1ptpi->Write();
-  // h1etapi->Write();
-  // h1phipi->Write();
-  // h1pt1->Write();
-  // h1pt2->Write();
-  // h1pt3->Write();
-  // h1ratio->Write();
-  // h15pt->Write();
-  // h110pt->Write();
-  // h120pt->Write();
-  // h1expt->Write();
-  // h2etapt->Write();
-  // h2phipt->Write();
-  // h2etaphi->Write();
-  // h2dRpt->Write();
-  // tree1->Write();
-  // tree1->Draw();
+  FileOut->cd();
+  h1pttau->Write();
+  h1etatau->Write();
+  h1phitau->Write(); 
+  h1nprongtau->Write();
+  h1nmatchedtau->Write();
+  h1ptpi->Write();
+  h1etapi->Write();
+  h1phipi->Write();
+  h1pt1->Write();
+  h1pt2->Write();
+  h1pt3->Write();
+  h1ratio->Write();
+  h15pt->Write();
+  h110pt->Write();
+  h120pt->Write();
+  h1expt->Write();
+  h2etapt->Write();
+  h2phipt->Write();
+  h2etaphi->Write();
+  h2dRpt->Write();
+  tree1->Write();
 }
 
 /*
@@ -306,10 +306,10 @@ void MyTauClass::MegaLoop(const char *str)
 
         Init(tree);
         Loop();
-        delete tree;
-        delete tree1;
-        delete FileOut;
-        delete FileIn;
+        // delete tree;
+        // delete tree1;
+        // delete FileOut;
+        // delete FileIn;
       }
     }
   }

@@ -949,7 +949,7 @@ MyTauClass::MyTauClass(const char *str, TString fname) : fChain(0)
    FileNameOut = fileout;
 
    if(FileOut) delete FileOut;
-   TFile *FileOut = new TFile(fileout, "RECREATE");
+   FileOut = new TFile(fileout, "RECREATE");
    tree1=NULL;
    InitOut();
 
