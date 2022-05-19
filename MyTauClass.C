@@ -41,7 +41,8 @@ void MyTauClass::Loop()
     if(JpsiTau_gen_tau_pt->size()!=0){
       unsigned int sum = 0;
       if(JpsiTau_gen_tau_pt->at(0)>1.){ 
-        h1pttau->Fill(JpsiTau_gen_tau_pt->at(0));
+        tau_true_pt=JpsiTau_gen_tau_pt->at(0);
+        h1pttau->Fill(tau_true_pt);
         h1etatau->Fill(JpsiTau_gen_tau_eta->at(0));
         h1phitau->Fill(JpsiTau_gen_tau_phi->at(0));
         h1nprongtau->Fill(JpsiTau_gen_tau_nprong->at(0));
@@ -359,6 +360,13 @@ void MyTauClass::show(const char * file="final.root")
   h1etapi->GetXaxis()->SetTitle("#eta");
   h1phipi->GetXaxis()->SetTitle("#phi");
   h1pt3->GetXaxis()->SetTitle("pt[GeV]");
+
+  h2etaphi->GetXaxis()->SetTitle("#phi");
+  h2etaphi->GetYaxis()->SetTitle("#eta");
+  h2etapt->GetXaxis()->SetTitle("pt[GeV]");
+  h2etapt->GetYaxis()->SetTitle("#eta");
+  h2phipt->GetXaxis()->SetTitle("pt[GeV]");
+  h2phipt->GetYaxis()->SetTitle("#phi");
   // start of the loop
   //Plot
   TCanvas *c1=new TCanvas("c1","GeneralCanvas",200,10,1400,1000);

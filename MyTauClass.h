@@ -869,6 +869,7 @@ public :
    Float_t        pir_pt[3];
    Float_t        pir_eta[3];
    Float_t        pir_phi[3];
+   Float_t        tau_true_pt;
    Bool_t         pi_flag;
    TTree          *tree1 = NULL;
 
@@ -1030,8 +1031,7 @@ void MyTauClass::InitOut()
    tree1->Branch("pi1_phi", &pi_phi[0], "pi1_phi/F");
    tree1->Branch("pi2_phi", &pi_phi[1], "pi2_phi/F");
    tree1->Branch("pi3_phi", &pi_phi[2], "pi3_phi/F");
-
-
+   tree1->Branch("tau_pt", &tau_true_pt, "tau_pt/F");
    // TTree *tree1 = new TTree("reco_triplet","reco_triplet");
    tree1->Branch("pi1r_pt", &pir_pt[0], "pi1r_pt/F");
    tree1->Branch("pi2r_pt", &pir_pt[1], "pi2r_pt/F");
