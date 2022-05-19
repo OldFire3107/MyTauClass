@@ -87,7 +87,6 @@ void MyTauClass::Loop()
           max_dr = max_dr < dr ? dr : max_dr;
           max_dr = TMath::Sqrt(max_dr);
           h2dRpt->Fill(JpsiTau_gen_tau_pt->at(0), max_dr);
-          tree1->Fill();
         }
         
       }
@@ -133,7 +132,7 @@ void MyTauClass::Loop()
     Float_t dR_min = 40;
     int min_pos = -1;
 
-    vector<Int_t*> num_comb;
+    vector<vector<Int_t>> num_comb;
     Int_t num_comb_min[3] = {-1, -1, -1};
     Int_t input[3] = {0, 1, 2};
     CombAdd(num_comb, input, 3);
@@ -143,15 +142,15 @@ void MyTauClass::Loop()
         h1pt1->Fill(JpsiTau_tau_pi1_pt->at(i));
         h1pt2->Fill(JpsiTau_tau_pi2_pt->at(i));
         h1pt3->Fill(JpsiTau_tau_pi3_pt->at(i));
-        pir_pt[in[0]] = JpsiTau_tau_pi1_pt->at(i);
-        pir_pt[in[1]] = JpsiTau_tau_pi2_pt->at(i);
-        pir_pt[in[2]] = JpsiTau_tau_pi3_pt->at(i);
-        pir_eta[in[0]] = JpsiTau_tau_pi1_eta->at(i);
-        pir_eta[in[1]] = JpsiTau_tau_pi2_eta->at(i);
-        pir_eta[in[2]] = JpsiTau_tau_pi3_eta->at(i);
-        pir_phi[in[0]] = JpsiTau_tau_pi1_phi->at(i);
-        pir_phi[in[1]] = JpsiTau_tau_pi2_phi->at(i);
-        pir_phi[in[2]] = JpsiTau_tau_pi3_phi->at(i);
+        pir_pt[in.at(0)] = JpsiTau_tau_pi1_pt->at(i);
+        pir_pt[in.at(1)] = JpsiTau_tau_pi2_pt->at(i);
+        pir_pt[in.at(2)] = JpsiTau_tau_pi3_pt->at(i);
+        pir_eta[in.at(0)] = JpsiTau_tau_pi1_eta->at(i);
+        pir_eta[in.at(1)] = JpsiTau_tau_pi2_eta->at(i);
+        pir_eta[in.at(2)] = JpsiTau_tau_pi3_eta->at(i);
+        pir_phi[in.at(0)] = JpsiTau_tau_pi1_phi->at(i);
+        pir_phi[in.at(1)] = JpsiTau_tau_pi2_phi->at(i);
+        pir_phi[in.at(2)] = JpsiTau_tau_pi3_phi->at(i);
         pi_flag = false;
 
         if(JpsiTau_gen_tau_nprong->size()!=0 && int(JpsiTau_gen_tau_nprong->at(0) == 3))
@@ -172,9 +171,9 @@ void MyTauClass::Loop()
           {
             dR_min = dR_sum;
             min_pos = i;
-            num_comb_min[0]=in[0];
-            num_comb_min[1]=in[1];
-            num_comb_min[2]=in[2];
+            num_comb_min[0]=in.at(0);
+            num_comb_min[1]=in.at(1);
+            num_comb_min[2]=in.at(2);
           }
         }
       }
@@ -184,16 +183,16 @@ void MyTauClass::Loop()
     {
       for(const auto& in: num_comb){
         for(int i=0; i < JpsiTau_tau_pi1_pt->size(); i++){
-          pir_pt[in[0]] = JpsiTau_tau_pi1_pt->at(i);
-          pir_pt[in[1]] = JpsiTau_tau_pi2_pt->at(i);
-          pir_pt[in[2]] = JpsiTau_tau_pi3_pt->at(i);
-          pir_eta[in[0]] = JpsiTau_tau_pi1_eta->at(i);
-          pir_eta[in[1]] = JpsiTau_tau_pi2_eta->at(i);
-          pir_eta[in[2]] = JpsiTau_tau_pi3_eta->at(i);
-          pir_phi[in[0]] = JpsiTau_tau_pi1_phi->at(i);
-          pir_phi[in[1]] = JpsiTau_tau_pi2_phi->at(i);
-          pir_phi[in[2]] = JpsiTau_tau_pi3_phi->at(i);
-          if(i == min_pos && in[0] == num_comb_min[0] && in[1] == num_comb_min[1] && in[2] == num_comb_min[2]) 
+          pir_pt[in.at(0)] = JpsiTau_tau_pi1_pt->at(i);
+          pir_pt[in.at(1)] = JpsiTau_tau_pi2_pt->at(i);
+          pir_pt[in.at(2)] = JpsiTau_tau_pi3_pt->at(i);
+          pir_eta[in.at(0)] = JpsiTau_tau_pi1_eta->at(i);
+          pir_eta[in.at(1)] = JpsiTau_tau_pi2_eta->at(i);
+          pir_eta[in.at(2)] = JpsiTau_tau_pi3_eta->at(i);
+          pir_phi[in.at(0)] = JpsiTau_tau_pi1_phi->at(i);
+          pir_phi[in.at(1)] = JpsiTau_tau_pi2_phi->at(i);
+          pir_phi[in.at(2)] = JpsiTau_tau_pi3_phi->at(i);
+          if(i == min_pos && in.at(0) == num_comb_min[0] && in.at(1) == num_comb_min[1] && in.at(2) == num_comb_min[2]) 
             pi_flag = true; 
           else 
             pi_flag = false;
@@ -455,11 +454,11 @@ void MyTauClass::SwapValue(Float_t &a, Float_t &b)
   b = t;
 }
 
-void MyTauClass::CombAdd(vector<Int_t*>& comb, Int_t arr[3], int n)
+void MyTauClass::CombAdd(vector<vector<Int_t>>& comb, Int_t arr[3], int n)
 {
-  sort(arr, arr+n);
-
   do {
-    comb.push_back(arr);
+    vector<Int_t> temp;
+    for(int i=0; i<n; i++) temp.push_back(arr[i]);
+    comb.push_back(temp);
   } while (next_permutation(arr, arr + n));
 }

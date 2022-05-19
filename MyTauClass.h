@@ -915,7 +915,7 @@ public :
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
    virtual void     SwapValue(Float_t &a, Float_t &b);
-   virtual void     CombAdd(vector<Int_t*>& comb, Int_t arr[3], int n=3);
+   virtual void     CombAdd(vector<vector<Int_t>>& comb, Int_t arr[3], int n);
 };
 
 #endif
