@@ -26,34 +26,6 @@ void MyTauClass::Loop()
   Long64_t nbytes = 0, nb = 0;
 
   //f->Close();
-  
-// Book here my histograms
-  TH1F *h1pttau = new TH1F("h1pttau","pt of the gen tau",50,1.,40.);
-  TH1F *h1etatau = new TH1F("h1etatau","eta of the gen tau",25,-2.5,2.5);
-  TH1F *h1phitau = new TH1F("h1phitau","phi of the gen tau",25,-1*TMath::Pi(),TMath::Pi());
-  TH1F *h1nprongtau = new TH1F("h1nprongtau","nprong of the gen tau",4,0,4);
-  TH1F *h1nmatchedtau = new TH1F("h1nmatchedtau","nmatched of the gen tau",4,0,4);
-
-  TH1F *h1ptpi = new TH1F("h1ptpi","pt of the gen pion",50,0.,20.);
-  TH1F *h1etapi = new TH1F("h1etapi","eta of the gen pion",25,-2.5,2.5);
-  TH1F *h1phipi = new TH1F("h1phipi","phi of the gen pion",25,-1*TMath::Pi(),TMath::Pi());
-  
-
-  TH1F *h1pt1 = new TH1F("h1pt1","pt of the gen pion1",50,0.,10.);
-  TH1F *h1pt2 = new TH1F("h1pt2","pt of the gen pion2",50,0.,10.);
-  TH1F *h1pt3 = new TH1F("h1pt3","pt of the gen pion3",50,0.,10.);
-
-  TH1F *h1ratio = new TH1F("h1ratio","pt of pion1/pt of tau",50,0,1);
-  TH1F *h15pt = new TH1F("h15pt", "dR for pt upto 5 GeV", 25, 0, 2);
-  TH1F *h110pt = new TH1F("h110pt", "dR for pt in 5-10 GeV range", 25, 0, 2);
-  TH1F *h120pt = new TH1F("h120pt", "dR for pt in 10-20 GeV range", 25, 0, 1);
-  TH1F *h1expt = new TH1F("h1expt", "dR for pt above 20 GeV", 25, 0, 1);
-
-  // PART 2
-  TH2F *h2etapt = new TH2F("h2etapt", "eta vs pt", 50, 1, 40, 25, -2.5, 2.5);
-  TH2F *h2phipt = new TH2F("h2phipt", "phi vs pt", 50, 1, 40, 25, -1*TMath::Pi(), TMath::Pi());
-  TH2F *h2etaphi = new TH2F("h2etaphi", "eta vs phi", 25, -1*TMath::Pi(), TMath::Pi(), 25, -2.5, 2.5);
-  TH2F *h2dRpt = new TH2F("h2dRpt", "dR vs pt", 50, 1, 40, 25, 0, 1.8);
 
   // TH1F *h1nprong = new TH1F("h1nprong","nprong of the tau",4,0,4);
 // TH1F *h1nprongpi = new TH1F("h1nprongtau","nprong of the gen pi",4,0,4);
@@ -122,8 +94,7 @@ void MyTauClass::Loop()
           float dr = pow(eta[0]-eta[1], 2) + pow(phi[0]-phi[1], 2);
           max_dr = max_dr < dr ? dr : max_dr;
           dr = pow(eta[1]-eta[2], 2) + pow(phi[1]-phi[2], 2);
-          max_dr = max_dr <
-            pi_flag = false; dr ? dr : max_dr;
+          max_dr = max_dr < dr ? dr : max_dr;
           dr = pow(eta[2]-eta[0], 2) + pow(phi[2]-phi[0], 2);
           max_dr = max_dr < dr ? dr : max_dr;
           max_dr = TMath::Sqrt(max_dr);
@@ -254,12 +225,7 @@ void MyTauClass::Loop()
 
   } // end loop on events
 
-
-  TString fileout = fileo;
-  fileout += fno;
-  fileout += ".root";
-
-  TFile *f = new TFile(fileout, "UPDATE");
+  TFile *f = new TFile(FileNameOut, "UPDATE");
   h1pttau->Write();
   h1etatau->Write();
   h1phitau->Write(); 
@@ -323,10 +289,11 @@ void MyTauClass::MegaLoop(const char *str)
         TString fileout = fileo;
         fileout += fname;
         fileout += ".root";
+        FileNameOut = fileout;
 
         TFile *f = new TFile(fileout, "RECREATE");
-        TTree *tree1=NULL;
-        InitOut(tree1);
+        tree1=NULL;
+        InitOut();
 
         TFile* file = new TFile(filename);
         TTree *tree=NULL;
@@ -335,7 +302,7 @@ void MyTauClass::MegaLoop(const char *str)
         dir->GetObject("tree",tree);
 
         Init(tree);
-        Loop(fname);
+        Loop();
         delete tree;
         delete tree1;
       }

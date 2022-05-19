@@ -11,6 +11,10 @@
 #include <TROOT.h>
 #include <TChain.h>
 #include <TFile.h>
+#include <TH2.h>
+#include <TStyle.h>
+#include <TH1.h>
+#include <TMath.h>
 #include <iostream>
 
 // Header file for the classes stored in the TTree if any.
@@ -856,6 +860,7 @@ public :
    TBranch        *b_JpsiTau_perEVT_data;   //!
 
    TString        FileNameIn;
+   TString        FileNameOut;
    Float_t        pi_pt[3];
    Float_t        pi_eta[3];
    Float_t        pi_phi[3];
@@ -863,16 +868,45 @@ public :
    Float_t        pir_eta[3];
    Float_t        pir_phi[3];
    Bool_t         pi_flag;
+   TTree          *tree1 = NULL;
+
+   // Book here my histograms
+   TH1F *h1pttau;
+   TH1F *h1etatau;
+   TH1F *h1phitau;
+   TH1F *h1nprongtau;
+   TH1F *h1nmatchedtau;
+
+   TH1F *h1ptpi;
+   TH1F *h1etapi;
+   TH1F *h1phipi;
+   
+
+   TH1F *h1pt1;
+   TH1F *h1pt2;
+   TH1F *h1pt3;
+
+   TH1F *h1ratio;
+   TH1F *h15pt;
+   TH1F *h110pt;
+   TH1F *h120pt;
+   TH1F *h1expt;
+
+   // PART 2
+   TH2F *h2etapt;
+   TH2F *h2phipt;
+   TH2F *h2etaphi;
+   TH2F *h2dRpt;
 
    MyTauClass();
    // MyTauClass(TTree *tree);
-   MyTauClass(const char *file);
+   MyTauClass(const char *file, TString fname);
    virtual ~MyTauClass();
    virtual Int_t    Cut(Long64_t entry);
    virtual Int_t    GetEntry(Long64_t entry);
    virtual Long64_t LoadTree(Long64_t entry);
    virtual void     Init(TTree *tree);
-   virtual void     InitOut(TTree *tree1);
+   virtual void     InitOut();
    virtual void     Loop();
    virtual void     show(const char*);
    virtual void     MegaLoop(const char *str);
@@ -902,9 +936,19 @@ MyTauClass::MyTauClass() : fChain(0)
 //    Init(tree);
 // }
 
-MyTauClass::MyTauClass(const char *str) : fChain(0) 
+MyTauClass::MyTauClass(const char *str, TString fname) : fChain(0) 
 {
 // Overloads the previous function to open a tree
+   const char* fileo="files/histos_";
+   TString fileout = fileo;
+   fileout += fname;
+   fileout += ".root";
+   FileNameOut = fileout;
+
+   TFile *f = new TFile(fileout, "RECREATE");
+   tree1=NULL;
+   InitOut();
+
    FileNameIn = str;
    TFile* file = new TFile(str);
    TTree *tree=NULL;
@@ -940,11 +984,11 @@ Long64_t MyTauClass::LoadTree(Long64_t entry)
    return centry;
 }
 
-void MyTauCLass::InitOut(TTree *tree1)
+void MyTauClass::InitOut()
 {
 
 // The tree
-   *tree1 = new TTree("triplet","triplet");
+   tree1 = new TTree("triplet","triplet");
    tree1->Branch("pi1_pt", &pi_pt[0], "pi1_pt/F");
    tree1->Branch("pi2_pt", &pi_pt[1], "pi2_pt/F");
    tree1->Branch("pi3_pt", &pi_pt[2], "pi3_pt/F");
@@ -967,6 +1011,58 @@ void MyTauCLass::InitOut(TTree *tree1)
    tree1->Branch("pi2r_phi", &pir_phi[1], "pi2r_phi/F");
    tree1->Branch("pi3r_phi", &pir_phi[2], "pi3r_phi/F");
    tree1->Branch("flag", &pi_flag, "flag/O");
+
+   if (h1pttau)
+   {
+      delete h1pttau;
+      delete h1etatau;
+      delete h1phitau;
+      delete h1nprongtau;
+      delete h1nmatchedtau;
+
+      delete h1ptpi;
+      delete h1etapi;
+      delete h1phipi;
+      
+
+      delete h1pt1;
+      delete h1pt2;
+      delete h1pt3;
+
+      delete h1ratio;
+      delete h15pt;
+      delete h110pt;
+      delete h120pt;
+      delete h1expt;
+   }
+
+   // Book here my histograms
+   h1pttau = new TH1F("h1pttau","pt of the gen tau",50,1.,40.);
+   h1etatau = new TH1F("h1etatau","eta of the gen tau",25,-2.5,2.5);
+   h1phitau = new TH1F("h1phitau","phi of the gen tau",25,-1*TMath::Pi(),TMath::Pi());
+   h1nprongtau = new TH1F("h1nprongtau","nprong of the gen tau",4,0,4);
+   h1nmatchedtau = new TH1F("h1nmatchedtau","nmatched of the gen tau",4,0,4);
+
+   h1ptpi = new TH1F("h1ptpi","pt of the gen pion",50,0.,20.);
+   h1etapi = new TH1F("h1etapi","eta of the gen pion",25,-2.5,2.5);
+   h1phipi = new TH1F("h1phipi","phi of the gen pion",25,-1*TMath::Pi(),TMath::Pi());
+   
+
+   h1pt1 = new TH1F("h1pt1","pt of the gen pion1",50,0.,10.);
+   h1pt2 = new TH1F("h1pt2","pt of the gen pion2",50,0.,10.);
+   h1pt3 = new TH1F("h1pt3","pt of the gen pion3",50,0.,10.);
+
+   h1ratio = new TH1F("h1ratio","pt of pion1/pt of tau",50,0,1);
+   h15pt = new TH1F("h15pt", "dR for pt upto 5 GeV", 25, 0, 2);
+   h110pt = new TH1F("h110pt", "dR for pt in 5-10 GeV range", 25, 0, 2);
+   h120pt = new TH1F("h120pt", "dR for pt in 10-20 GeV range", 25, 0, 1);
+   h1expt = new TH1F("h1expt", "dR for pt above 20 GeV", 25, 0, 1);
+
+   // PART 2
+   h2etapt = new TH2F("h2etapt", "eta vs pt", 50, 1, 40, 25, -2.5, 2.5);
+   h2phipt = new TH2F("h2phipt", "phi vs pt", 50, 1, 40, 25, -1*TMath::Pi(), TMath::Pi());
+   h2etaphi = new TH2F("h2etaphi", "eta vs phi", 25, -1*TMath::Pi(), TMath::Pi(), 25, -2.5, 2.5);
+   h2dRpt = new TH2F("h2dRpt", "dR vs pt", 50, 1, 40, 25, 0, 1.8);
 }
 
 void MyTauClass::Init(TTree *tree)
