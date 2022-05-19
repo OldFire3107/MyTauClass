@@ -1,9 +1,5 @@
 #define MyTauClass_cxx
 #include "MyTauClass.h"
-#include <TH2.h>
-#include <TStyle.h>
-#include <TH1.h>
-#include <TMath.h>
 #include <TCanvas.h>
 #include <TLegend.h>
 #include <TString.h>
@@ -31,15 +27,6 @@ void MyTauClass::Loop()
 // TH1F *h1nprongpi = new TH1F("h1nprongtau","nprong of the gen pi",4,0,4);
   //  TH1I *h1npfCand = new TH1I("h1npfCand","number of pfCand",100,0.,100.);
   //  TH1F *h1pfCandpt = new TH1F("h1pfCandpt","pt of the PF candidate",100,0.,40.);
-  h1pttau->GetXaxis()->SetTitle("pt[GeV]");
-  h1etatau->GetXaxis()->SetTitle("#eta");
-  h1phitau->GetXaxis()->SetTitle("#phi");
-  h1nprongtau->GetXaxis()->SetTitle("nprongs");
-
-  h1ptpi->GetXaxis()->SetTitle("pt[GeV]");
-  h1etapi->GetXaxis()->SetTitle("#eta");
-  h1phipi->GetXaxis()->SetTitle("#phi");
-  h1pt3->GetXaxis()->SetTitle("pt[GeV]");
 
   // start of the loop
   for (Long64_t jentry=0; jentry<nentries;jentry++) {
@@ -121,6 +108,7 @@ void MyTauClass::Loop()
     
     // if (Cut(ientry) < 0) continue;
     
+    // Swaping the values so pt1 is max
     if (pi_pt[0] < pi_pt[1])
     {
       SwapValue(pi_pt[0], pi_pt[1]);
@@ -140,8 +128,14 @@ void MyTauClass::Loop()
       SwapValue(pi_phi[1], pi_phi[2]);
     }
     
+    // Comparing eta and phi since pt can be lost via Bremsstrahlung
     Float_t dR_min = 40;
     int min_pos = -1;
+
+    vector<Int_t*> num_comb;
+    Int_t num_comb_min[3] = {0, 1, 2};
+
+
     for(int i=0; i < JpsiTau_tau_pi1_pt->size(); i++){
       h1pt1->Fill(JpsiTau_tau_pi1_pt->at(i));
       h1pt2->Fill(JpsiTau_tau_pi2_pt->at(i));
@@ -225,7 +219,7 @@ void MyTauClass::Loop()
 
   } // end loop on events
 
-  TFile *f = new TFile(FileNameOut, "UPDATE");
+  FileOut->cd();
   h1pttau->Write();
   h1etatau->Write();
   h1phitau->Write(); 
@@ -247,8 +241,6 @@ void MyTauClass::Loop()
   h2etaphi->Write();
   h2dRpt->Write();
   tree1->Write();
-  f->Close();
-  delete f;
 }
 
 /*
@@ -291,20 +283,22 @@ void MyTauClass::MegaLoop(const char *str)
         fileout += ".root";
         FileNameOut = fileout;
 
-        TFile *f = new TFile(fileout, "RECREATE");
+        FileOut = new TFile(fileout, "RECREATE");
         tree1=NULL;
         InitOut();
 
-        TFile* file = new TFile(filename);
+        FileIn = new TFile(filename);
         TTree *tree=NULL;
 
-        TDirectory *dir = (TDirectory*)file->Get("ntuplizer");
+        TDirectory *dir = (TDirectory*)FileIn->Get("ntuplizer");
         dir->GetObject("tree",tree);
 
         Init(tree);
         Loop();
         delete tree;
         delete tree1;
+        delete FileOut;
+        delete FileIn;
       }
     }
   }
@@ -447,4 +441,13 @@ void MyTauClass::SwapValue(Float_t &a, Float_t &b)
   Float_t t = a;
   a = b;
   b = t;
+}
+
+void MyTauClass::CombAdd(vector<Int_t*>& comb, Int_t arr[3], int n=3)
+{
+  sort(arr, arr+n);
+
+  do {
+    comb.push_back(arr);
+  } while (next_permutation(arr, arr + n));
 }

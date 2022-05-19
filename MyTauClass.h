@@ -860,7 +860,9 @@ public :
    TBranch        *b_JpsiTau_perEVT_data;   //!
 
    TString        FileNameIn;
+   TFile          *FileIn;
    TString        FileNameOut;
+   TFile          *FileOut;
    Float_t        pi_pt[3];
    Float_t        pi_eta[3];
    Float_t        pi_phi[3];
@@ -913,6 +915,7 @@ public :
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
    virtual void     SwapValue(Float_t &a, Float_t &b);
+   virtual void     CombAdd(vector<Int_t*>&, Int_t[], int);
 };
 
 #endif
@@ -945,15 +948,15 @@ MyTauClass::MyTauClass(const char *str, TString fname) : fChain(0)
    fileout += ".root";
    FileNameOut = fileout;
 
-   TFile *f = new TFile(fileout, "RECREATE");
+   TFile *FileOut = new TFile(fileout, "RECREATE");
    tree1=NULL;
    InitOut();
 
    FileNameIn = str;
-   TFile* file = new TFile(str);
+   FileIn = new TFile(str);
    TTree *tree=NULL;
 
-   TDirectory *dir = (TDirectory*)file->Get("ntuplizer");
+   TDirectory *dir = (TDirectory*)FileIn->Get("ntuplizer");
    dir->GetObject("tree",tree);
 
    Init(tree);
