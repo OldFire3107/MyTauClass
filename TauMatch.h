@@ -77,9 +77,6 @@ public :
    virtual void     Loop();
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
-
-   static float deltaPhi(float phi1, float phi2);
-   static Float_t getDeltaR(Float_t eta1, Float_t phi1, Float_t eta2, Float_t phi2);
 };
 
 #endif

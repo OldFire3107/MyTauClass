@@ -45,16 +45,19 @@ void TauMatch::Loop()
    TH1F *h1ratiosig3 = new TH1F("h1ratiosig3", "pt_pi3_matched/pt_tau", 30, 0, 1);
    TH1F *h1ratiobg3  = new TH1F("h1ratiobg3", "pt_pi3_unmatched/pt_tau", 30, 0, 1);
 
-   TH1F *h1ratiosig4 = new TH1F("h1ratiosig4", "pt_sum/pt_tau", 30, 0, 2);
-   TH1F *h1ratiobg4  = new TH1F("h1ratiobg4", "pt_sum/pt_tau", 30, 0, 2);
+   TH1F *h1ratiosig4 = new TH1F("h1ratiosig4", "pt_sum_matched/pt_tau", 30, 0, 2);
+   TH1F *h1ratiobg4  = new TH1F("h1ratiobg4", "pt_sum_unmatched/pt_tau", 30, 0, 2);
 
    TH1F *h1deta = new TH1F("h1deta", "deta abs", 30, 0, 0.01);
    TH1F *h1dphi  = new TH1F("h1dphi", "dphi abs", 30, 0, 0.01);
    TH1F *h1dR = new TH1F("h1dR", "dR", 30, 0, 0.015);
    TH1F *h1dpT  = new TH1F("h1dpT", "dpT", 30, 0, 0.1);
 
-   TH1F *h1vismasssig = new TH1F("h1vismasssig", "vis_mass", 20, 0,4);
-   TH1F *h1vismassbg = new TH1F("h1vismassbg", "vis_mass", 20, 0,4);
+   TH1F *h1vismasssig = new TH1F("h1vismasssig", "vis_mass_matched", 20, 0,4);
+   TH1F *h1vismassbg = new TH1F("h1vismassbg", "vis_mass_background", 20, 0,4);
+
+   TH2F *h2drvsptsig = new TH2F("h2drvsptsignal", "dr vs pt signal", 50, 0, 10, 25, 0, 0.015);
+   TH2F *h2drvsptbg = new TH2F("h2drvsptbg", "dr vs pt bg", 50, 0, 10, 25, 0, 0.015);
    
    if (fChain == 0) return;
 
@@ -94,29 +97,20 @@ void TauMatch::Loop()
       
       Float_t dR, deta, dphi;
       
-      Float_t dphitemp = pi1r_phi-pi1_phi;
-      if(dphitemp > 2*TMath::Pi()) dphitemp -= 2*TMath::Pi();
-      if(dphitemp < -2*TMath::Pi()) dphitemp += 2*TMath::Pi();
       deta_max = abs(pi1r_eta-pi1_eta);
-      dphi_max = abs(dphitemp);
+      dphi_max = MyTauClass::deltaPhi(pi1r_phi, pi1_phi);
       dR_max = TMath::Sqrt(deta_max*deta_max + dphi_max*dphi_max);
 
-      dphitemp = pi2r_phi-pi2_phi;
-      if(dphitemp > 2*TMath::Pi()) dphitemp -= 2*TMath::Pi();
-      if(dphitemp < -2*TMath::Pi()) dphitemp += 2*TMath::Pi();
       deta = abs(pi2r_eta-pi2_eta);
-      dphi = abs(dphitemp);
+      dphi = MyTauClass::deltaPhi(pi2r_phi, pi2_phi);
       dR = TMath::Sqrt(deta*deta + dphi*dphi);
 
       if (deta_max < deta) deta_max = deta;
       if (dphi_max < dphi) dphi_max = dphi;
       if (dR_max < dR) dR_max = dR;
 
-      dphitemp = pi3r_phi-pi3_phi;
-      if(dphitemp > 2*TMath::Pi()) dphitemp -= 2*TMath::Pi();
-      if(dphitemp < -2*TMath::Pi()) dphitemp += 2*TMath::Pi();
       deta = abs(pi3r_eta-pi3_eta);
-      dphi = abs(dphitemp);
+      dphi = MyTauClass::deltaPhi(pi3r_phi, pi3_phi);
       dR = TMath::Sqrt(deta*deta + dphi*dphi);
 
       if (deta_max < deta) deta_max = deta;
@@ -137,6 +131,8 @@ void TauMatch::Loop()
          h1deta->Fill(deta_max);
          h1dphi->Fill(dphi_max);
          h1dR->Fill(dR_max);
+
+         h2drvsptsig->Fill(Pt_tot, dR_max);
       }
       else
       {
@@ -145,6 +141,8 @@ void TauMatch::Loop()
          h1ratiobg3->Fill(pi_pt[0]/Pt_tot);
          h1ratiobg4->Fill(Pt_tot/tau_pt);
          h1vismassbg->Fill(vis_mass);
+
+         h2drvsptbg->Fill(Pt_tot, dR_max);
       }
    }
 
@@ -201,4 +199,12 @@ void TauMatch::Loop()
    can6->cd(2);
    h1vismassbg->Draw();
    can6->SaveAs("vis_mass.pdf");
+
+   TCanvas *can7 = new TCanvas("can7", "dr_vs_pT", 300,20,1000,750);
+   can7->Divide(1,2);
+   can7->cd(1);
+   h2drvsptsig->Draw("colz");
+   can7->cd(2);
+   h2drvsptbg->Draw("colz");
+   can7->SaveAs("dr_vs_pT.pdf");
 }
