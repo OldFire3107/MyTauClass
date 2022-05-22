@@ -1,5 +1,6 @@
 #define TauMatch_cxx
 #include "TauMatch.h"
+#include "MyTauClass.h"
 #include <TH2.h>
 #include <TStyle.h>
 #include <TCanvas.h>

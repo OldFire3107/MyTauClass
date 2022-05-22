@@ -58,11 +58,7 @@ void MyTauClass::Loop()
 
         if (int(JpsiTau_gen_tau_nprong->at(0) == 2))
         {
-          Float_t dphitemp = JpsiTau_gen_pion_phi->at(sum)-JpsiTau_gen_pion_phi->at(sum+1);
-          if(dphitemp > 2*TMath::Pi()) dphitemp -= 2*TMath::Pi();
-          if(dphitemp < -2*TMath::Pi()) dphitemp += 2*TMath::Pi();
-          max_dr = pow(dphitemp, 2) + pow(JpsiTau_gen_pion_eta->at(sum)-JpsiTau_gen_pion_eta->at(sum+1), 2);
-          max_dr = TMath::Sqrt(max_dr);
+          max_dr = getDeltaR(JpsiTau_gen_pion_eta->at(sum), JpsiTau_gen_pion_phi->at(sum), JpsiTau_gen_pion_eta->at(sum+1), JpsiTau_gen_pion_phi->at(sum+1));
           h2dRpt->Fill(JpsiTau_gen_tau_pt->at(0), max_dr);
         }
 
@@ -83,20 +79,11 @@ void MyTauClass::Loop()
 
         if (int(JpsiTau_gen_tau_nprong->at(0) == 3))
         {
-          Float_t dphitemp = phi[0]-phi[1];
-          if(dphitemp > 2*TMath::Pi()) dphitemp -= 2*TMath::Pi();
-          if(dphitemp < -2*TMath::Pi()) dphitemp += 2*TMath::Pi();
-          float dr = pow(dphitemp, 2) + pow(eta[0]-eta[1], 2);
+          float dr = getDeltaR(eta[0], phi[0], eta[1], phi[1]);
           max_dr = max_dr < dr ? dr : max_dr;
-          dphitemp = phi[1]-phi[2];
-          if(dphitemp > 2*TMath::Pi()) dphitemp -= 2*TMath::Pi();
-          if(dphitemp < -2*TMath::Pi()) dphitemp += 2*TMath::Pi();
-          dr = pow(dphitemp, 2) + pow(eta[1]-eta[2], 2);
+          dr = getDeltaR(eta[1], phi[1], eta[2], phi[2]);
           max_dr = max_dr < dr ? dr : max_dr;
-          dphitemp = phi[2]-phi[0];
-          if(dphitemp > 2*TMath::Pi()) dphitemp -= 2*TMath::Pi();
-          if(dphitemp < -2*TMath::Pi()) dphitemp += 2*TMath::Pi();
-          dr = pow(dphitemp, 2) + pow(eta[2]-eta[0], 2);
+          dr = getDeltaR(eta[2], phi[2], eta[0], phi[0]);
           max_dr = max_dr < dr ? dr : max_dr;
           max_dr = TMath::Sqrt(max_dr);
           h2dRpt->Fill(JpsiTau_gen_tau_pt->at(0), max_dr);
@@ -173,10 +160,7 @@ void MyTauClass::Loop()
           Float_t dR_sum = 0;
           for(int j=0; j < 3; j++)
           {
-            Float_t dphitemp = pi_phi[j]-pir_phi[j];
-            if(dphitemp > 2*TMath::Pi()) dphitemp -= 2*TMath::Pi();
-            if(dphitemp < -2*TMath::Pi()) dphitemp += 2*TMath::Pi();
-            dR = TMath::Sqrt(pow(pi_eta[j]-pir_eta[j],2)+pow(dphitemp,2));
+            dR = getDelta(pi_eta[j], pi_phi[j], pir_eta[j], pir_phi[j]);
             dR_sum += dR;
             if (dR > 0.1)
             {
@@ -270,15 +254,20 @@ void MyTauClass::Loop()
   tree1->Write();
 }
 
-/*
-float deltaPhi(float phi1, float phi2) {
-    float result = phi1 - phi2;
-    while (result > TMath::Pi()) result -= float(2.*TMath::Pi());
-    while (result <= -TMath::Pi()) result += float(2.*TMath::Pi());
-    float absresult=TMath::Abs(result);
-    return absresult;
+float MyTauClass::deltaPhi(float phi1, float phi2) {
+  float result = phi1 - phi2;
+  while (result > TMath::Pi()) result -= float(2.*TMath::Pi());
+  while (result <= -TMath::Pi()) result += float(2.*TMath::Pi());
+  float absresult=TMath::Abs(result);
+  return absresult;
 }
-*/
+
+Float_t MyTauClass::getDeltaR(Float_t eta1, Float_t phi1, Float_t eta2, Float_t phi2)
+{
+  Float_t dphi = deltaPhi(phi1, phi2);
+  return sqrt(dphi*dphi + (eta1-eta2)*(eta1-eta2));
+}
+
 
 void MyTauClass::MegaLoop(const char *str)
 {
