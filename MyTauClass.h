@@ -917,8 +917,8 @@ public :
    virtual void     Show(Long64_t entry = -1);
    virtual void     SwapValue(Float_t &a, Float_t &b);
    virtual void     CombAdd(vector<vector<Int_t>>& comb, Int_t arr[3], int n);
-   virtual static float    deltaPhi(float phi1, float phi2);
-   virtual static Float_t  getDeltaR(Float_t eta1, Float_t phi1, Float_t eta2, Float_t phi2);
+   static float    deltaPhi(float phi1, float phi2);
+   static Float_t  getDeltaR(Float_t eta1, Float_t phi1, Float_t eta2, Float_t phi2);
 };
 
 #endif
