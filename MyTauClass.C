@@ -58,7 +58,10 @@ void MyTauClass::Loop()
 
         if (int(JpsiTau_gen_tau_nprong->at(0) == 2))
         {
-          max_dr = pow(JpsiTau_gen_pion_phi->at(sum)-JpsiTau_gen_pion_phi->at(sum+1), 2) + pow(JpsiTau_gen_pion_eta->at(sum)-JpsiTau_gen_pion_eta->at(sum+1), 2);
+          Float_t dphitemp = JpsiTau_gen_pion_phi->at(sum)-JpsiTau_gen_pion_phi->at(sum+1);
+          if(dphitemp > 2*TMath::Pi()) dphitemp -= 2*TMath::Pi();
+          if(dphitemp < -2*TMath::Pi()) dphitemp += 2*TMath::Pi();
+          max_dr = pow(dphitemp, 2) + pow(JpsiTau_gen_pion_eta->at(sum)-JpsiTau_gen_pion_eta->at(sum+1), 2);
           max_dr = TMath::Sqrt(max_dr);
           h2dRpt->Fill(JpsiTau_gen_tau_pt->at(0), max_dr);
         }
@@ -80,11 +83,20 @@ void MyTauClass::Loop()
 
         if (int(JpsiTau_gen_tau_nprong->at(0) == 3))
         {
-          float dr = pow(eta[0]-eta[1], 2) + pow(phi[0]-phi[1], 2);
+          Float_t dphitemp = phi[0]-phi[1];
+          if(dphitemp > 2*TMath::Pi()) dphitemp -= 2*TMath::Pi();
+          if(dphitemp < -2*TMath::Pi()) dphitemp += 2*TMath::Pi();
+          float dr = pow(dphitemp, 2) + pow(eta[0]-eta[1], 2);
           max_dr = max_dr < dr ? dr : max_dr;
-          dr = pow(eta[1]-eta[2], 2) + pow(phi[1]-phi[2], 2);
+          dphitemp = phi[1]-phi[2];
+          if(dphitemp > 2*TMath::Pi()) dphitemp -= 2*TMath::Pi();
+          if(dphitemp < -2*TMath::Pi()) dphitemp += 2*TMath::Pi();
+          dr = pow(dphitemp, 2) + pow(eta[1]-eta[2], 2);
           max_dr = max_dr < dr ? dr : max_dr;
-          dr = pow(eta[2]-eta[0], 2) + pow(phi[2]-phi[0], 2);
+          dphitemp = phi[2]-phi[0];
+          if(dphitemp > 2*TMath::Pi()) dphitemp -= 2*TMath::Pi();
+          if(dphitemp < -2*TMath::Pi()) dphitemp += 2*TMath::Pi();
+          dr = pow(dphitemp, 2) + pow(eta[2]-eta[0], 2);
           max_dr = max_dr < dr ? dr : max_dr;
           max_dr = TMath::Sqrt(max_dr);
           h2dRpt->Fill(JpsiTau_gen_tau_pt->at(0), max_dr);
@@ -161,7 +173,10 @@ void MyTauClass::Loop()
           Float_t dR_sum = 0;
           for(int j=0; j < 3; j++)
           {
-            dR = TMath::Sqrt(pow(pi_eta[j]-pir_eta[j],2)+pow(pi_phi[j]-pir_phi[j],2));
+            Float_t dphitemp = pi_phi[j]-pir_phi[j];
+            if(dphitemp > 2*TMath::Pi()) dphitemp -= 2*TMath::Pi();
+            if(dphitemp < -2*TMath::Pi()) dphitemp += 2*TMath::Pi();
+            dR = TMath::Sqrt(pow(pi_eta[j]-pir_eta[j],2)+pow(dphitemp,2));
             dR_sum += dR;
             if (dR > 0.1)
             {

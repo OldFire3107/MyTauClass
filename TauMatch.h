@@ -8,6 +8,8 @@
 #ifndef TauMatch_h
 #define TauMatch_h
 
+#define PI_MASS 0.1396
+
 #include <TROOT.h>
 #include <TChain.h>
 #include <TFile.h>
