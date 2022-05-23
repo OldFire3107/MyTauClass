@@ -108,26 +108,6 @@ void MyTauClass::Loop()
     
     // if (Cut(ientry) < 0) continue;
     
-    // Swaping the values so pt1 is max
-    if (pi_pt[0] < pi_pt[1])
-    {
-      SwapValue(pi_pt[0], pi_pt[1]);
-      SwapValue(pi_eta[0], pi_eta[1]);
-      SwapValue(pi_phi[0], pi_phi[1]);
-    }
-    if (pi_pt[0] < pi_pt[2])
-    {
-      SwapValue(pi_pt[0], pi_pt[2]);
-      SwapValue(pi_eta[0], pi_eta[2]);
-      SwapValue(pi_phi[0], pi_phi[2]);
-    }
-    if (pi_pt[1] < pi_pt[2])
-    {
-      SwapValue(pi_pt[1], pi_pt[2]);
-      SwapValue(pi_eta[1], pi_eta[2]);
-      SwapValue(pi_phi[1], pi_phi[2]);
-    }
-    
     // Comparing eta and phi since pt can be lost via Bremsstrahlung
     Float_t dR_min = 40;
     int min_pos = -1;
@@ -137,22 +117,23 @@ void MyTauClass::Loop()
     Int_t input[3] = {0, 1, 2};
     CombAdd(num_comb, input, 3);
 
-    for(const auto& in: num_comb){
-      for(int i=0; i < JpsiTau_tau_pi1_pt->size(); i++){
-        h1pt1->Fill(JpsiTau_tau_pi1_pt->at(i));
-        h1pt2->Fill(JpsiTau_tau_pi2_pt->at(i));
-        h1pt3->Fill(JpsiTau_tau_pi3_pt->at(i));
-        pir_pt[in.at(0)] = JpsiTau_tau_pi1_pt->at(i);
-        pir_pt[in.at(1)] = JpsiTau_tau_pi2_pt->at(i);
-        pir_pt[in.at(2)] = JpsiTau_tau_pi3_pt->at(i);
-        pir_eta[in.at(0)] = JpsiTau_tau_pi1_eta->at(i);
-        pir_eta[in.at(1)] = JpsiTau_tau_pi2_eta->at(i);
-        pir_eta[in.at(2)] = JpsiTau_tau_pi3_eta->at(i);
-        pir_phi[in.at(0)] = JpsiTau_tau_pi1_phi->at(i);
-        pir_phi[in.at(1)] = JpsiTau_tau_pi2_phi->at(i);
-        pir_phi[in.at(2)] = JpsiTau_tau_pi3_phi->at(i);
-        pi_flag = false;
+    
+    for(int i=0; i < JpsiTau_tau_pi1_pt->size(); i++){
+      h1pt1->Fill(JpsiTau_tau_pi1_pt->at(i));
+      h1pt2->Fill(JpsiTau_tau_pi2_pt->at(i));
+      h1pt3->Fill(JpsiTau_tau_pi3_pt->at(i));
+      pir_pt[0] = JpsiTau_tau_pi1_pt->at(i);
+      pir_pt[1] = JpsiTau_tau_pi2_pt->at(i);
+      pir_pt[2] = JpsiTau_tau_pi3_pt->at(i);
+      pir_eta[0] = JpsiTau_tau_pi1_eta->at(i);
+      pir_eta[1] = JpsiTau_tau_pi2_eta->at(i);
+      pir_eta[2] = JpsiTau_tau_pi3_eta->at(i);
+      pir_phi[0] = JpsiTau_tau_pi1_phi->at(i);
+      pir_phi[1] = JpsiTau_tau_pi2_phi->at(i);
+      pir_phi[2] = JpsiTau_tau_pi3_phi->at(i);
+      pi_flag = false;
 
+      for(const auto& in: num_comb){
         if(JpsiTau_gen_tau_nprong->size()!=0 && int(JpsiTau_gen_tau_nprong->at(0) == 3))
         {
           pi_flag = true;
@@ -160,7 +141,7 @@ void MyTauClass::Loop()
           Float_t dR_sum = 0;
           for(int j=0; j < 3; j++)
           {
-            dR = getDeltaR(pi_eta[j], pi_phi[j], pir_eta[j], pir_phi[j]);
+            dR = getDeltaR(pi_eta[in.at(j)], pi_phi[in.at(j)], pir_eta[j], pir_phi[j]);
             dR_sum += dR;
             if (dR > 0.1)
             {
@@ -179,30 +160,54 @@ void MyTauClass::Loop()
       }
     }
 
+    // Making it match
+    Float_t temp_transfer[3];
+    temp_transfer[0] = pi_pt[num_comb_min[0]];
+    temp_transfer[1] = pi_pt[num_comb_min[1]];
+    temp_transfer[2] = pi_pt[num_comb_min[2]];
+    pi_pt[0] = temp_transfer[0];
+    pi_pt[1] = temp_transfer[1];
+    pi_pt[2] = temp_transfer[2];
+    temp_transfer[0] = pi_eta[num_comb_min[0]];
+    temp_transfer[1] = pi_eta[num_comb_min[1]];
+    temp_transfer[2] = pi_eta[num_comb_min[2]];
+    pi_eta[0] = temp_transfer[0];
+    pi_eta[1] = temp_transfer[1];
+    pi_eta[2] = temp_transfer[2];
+    temp_transfer[0] = pi_phi[num_comb_min[0]];
+    temp_transfer[1] = pi_phi[num_comb_min[1]];
+    temp_transfer[2] = pi_phi[num_comb_min[2]];
+    pi_phi[0] = temp_transfer[0];
+    pi_phi[1] = temp_transfer[1];
+    pi_phi[2] = temp_transfer[2];
+
+
     if(JpsiTau_gen_tau_nprong->size()!=0 && int(JpsiTau_gen_tau_nprong->at(0) == 3))
     {
-      for(const auto& in: num_comb){
-        for(int i=0; i < JpsiTau_tau_pi1_pt->size(); i++){
-          pir_pt[in.at(0)] = JpsiTau_tau_pi1_pt->at(i);
-          pir_pt[in.at(1)] = JpsiTau_tau_pi2_pt->at(i);
-          pir_pt[in.at(2)] = JpsiTau_tau_pi3_pt->at(i);
-          pir_eta[in.at(0)] = JpsiTau_tau_pi1_eta->at(i);
-          pir_eta[in.at(1)] = JpsiTau_tau_pi2_eta->at(i);
-          pir_eta[in.at(2)] = JpsiTau_tau_pi3_eta->at(i);
-          pir_phi[in.at(0)] = JpsiTau_tau_pi1_phi->at(i);
-          pir_phi[in.at(1)] = JpsiTau_tau_pi2_phi->at(i);
-          pir_phi[in.at(2)] = JpsiTau_tau_pi3_phi->at(i);
-          pir_q[in.at(0)] = JpsiTau_tau_pi1_q->at(i);
-          pir_q[in.at(1)] = JpsiTau_tau_pi2_q->at(i);
-          pir_q[in.at(2)] = JpsiTau_tau_pi3_q->at(i);
-          if(i == min_pos && in.at(0) == num_comb_min[0] && in.at(1) == num_comb_min[1] && in.at(2) == num_comb_min[2]) 
-            pi_flag = true; 
-          else 
-            pi_flag = false;
+      for(int i=0; i < JpsiTau_tau_pi1_pt->size(); i++){
+        pir_pt[0] = JpsiTau_tau_pi1_pt->at(i);
+        pir_pt[1] = JpsiTau_tau_pi2_pt->at(i);
+        pir_pt[2] = JpsiTau_tau_pi3_pt->at(i);
+        pir_eta[0] = JpsiTau_tau_pi1_eta->at(i);
+        pir_eta[1] = JpsiTau_tau_pi2_eta->at(i);
+        pir_eta[2] = JpsiTau_tau_pi3_eta->at(i);
+        pir_phi[0] = JpsiTau_tau_pi1_phi->at(i);
+        pir_phi[1] = JpsiTau_tau_pi2_phi->at(i);
+        pir_phi[2] = JpsiTau_tau_pi3_phi->at(i);
+        pir_q[0] = JpsiTau_tau_pi1_q->at(i);
+        pir_q[1] = JpsiTau_tau_pi2_q->at(i);
+        pir_q[2] = JpsiTau_tau_pi3_q->at(i);
 
-          tree1->Fill();
-        }
+        // To Do to sort all var in order of pirpt
+
+        if(i == min_pos) 
+          pi_flag = true; 
+        else 
+          pi_flag = false;
+
+        tree1->Fill();
       }
+    
     }
 
     // sinec above 1 prong and 2 prong messeages were never printed it is
