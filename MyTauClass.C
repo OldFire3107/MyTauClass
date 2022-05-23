@@ -160,7 +160,7 @@ void MyTauClass::Loop()
           Float_t dR_sum = 0;
           for(int j=0; j < 3; j++)
           {
-            dR = getDelta(pi_eta[j], pi_phi[j], pir_eta[j], pir_phi[j]);
+            dR = getDeltaR(pi_eta[j], pi_phi[j], pir_eta[j], pir_phi[j]);
             dR_sum += dR;
             if (dR > 0.1)
             {
@@ -192,6 +192,9 @@ void MyTauClass::Loop()
           pir_phi[in.at(0)] = JpsiTau_tau_pi1_phi->at(i);
           pir_phi[in.at(1)] = JpsiTau_tau_pi2_phi->at(i);
           pir_phi[in.at(2)] = JpsiTau_tau_pi3_phi->at(i);
+          pir_q[in.at(0)] = JpsiTau_tau_pi1_q->at(i);
+          pir_q[in.at(1)] = JpsiTau_tau_pi2_q->at(i);
+          pir_q[in.at(2)] = JpsiTau_tau_pi3_q->at(i);
           if(i == min_pos && in.at(0) == num_comb_min[0] && in.at(1) == num_comb_min[1] && in.at(2) == num_comb_min[2]) 
             pi_flag = true; 
           else 

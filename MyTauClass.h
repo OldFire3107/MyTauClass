@@ -869,6 +869,7 @@ public :
    Float_t        pir_pt[3];
    Float_t        pir_eta[3];
    Float_t        pir_phi[3];
+   Int_t          pir_q[3];
    Float_t        tau_true_pt;
    Bool_t         pi_flag;
    TTree          *tree1 = NULL;
@@ -917,8 +918,8 @@ public :
    virtual void     Show(Long64_t entry = -1);
    virtual void     SwapValue(Float_t &a, Float_t &b);
    virtual void     CombAdd(vector<vector<Int_t>>& comb, Int_t arr[3], int n);
-   static float    deltaPhi(float phi1, float phi2);
-   static Float_t  getDeltaR(Float_t eta1, Float_t phi1, Float_t eta2, Float_t phi2);
+   virtual float    deltaPhi(float phi1, float phi2);
+   virtual Float_t  getDeltaR(Float_t eta1, Float_t phi1, Float_t eta2, Float_t phi2);
 };
 
 #endif
@@ -1044,6 +1045,9 @@ void MyTauClass::InitOut()
    tree1->Branch("pi1r_phi", &pir_phi[0], "pi1r_phi/F");
    tree1->Branch("pi2r_phi", &pir_phi[1], "pi2r_phi/F");
    tree1->Branch("pi3r_phi", &pir_phi[2], "pi3r_phi/F");
+   tree1->Branch("pi1r_q", &pir_q[0], "pi1r_phi/I");
+   tree1->Branch("pi2r_q", &pir_q[1], "pi2r_phi/I");
+   tree1->Branch("pi3r_q", &pir_q[2], "pi3r_phi/I");
    tree1->Branch("flag", &pi_flag, "flag/O");
 
    if (h1pttau)

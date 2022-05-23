@@ -43,6 +43,9 @@ public :
    Float_t         pi1r_phi;
    Float_t         pi2r_phi;
    Float_t         pi3r_phi;
+   Float_t         pi1r_q;
+   Float_t         pi2r_q;
+   Float_t         pi3r_q;
    Bool_t          flag;
 
    // List of branches
@@ -65,6 +68,9 @@ public :
    TBranch        *b_pi1r_phi;   //!
    TBranch        *b_pi2r_phi;   //!
    TBranch        *b_pi3r_phi;   //!
+   TBranch        *b_pi1r_q;   //!
+   TBranch        *b_pi2r_q;   //!
+   TBranch        *b_pi3r_q;   //!
    TBranch        *b_flag;   //!
 
    TauMatch(TTree *tree=0);
@@ -77,6 +83,8 @@ public :
    virtual void     Loop();
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
+   virtual float    deltaPhi(float phi1, float phi2);
+   virtual Float_t  getDeltaR(Float_t eta1, Float_t phi1, Float_t eta2, Float_t phi2);
 };
 
 #endif
@@ -166,6 +174,9 @@ void TauMatch::Init(TTree *tree)
    fChain->SetBranchAddress("pi1r_phi", &pi1r_phi, &b_pi1r_phi);
    fChain->SetBranchAddress("pi2r_phi", &pi2r_phi, &b_pi2r_phi);
    fChain->SetBranchAddress("pi3r_phi", &pi3r_phi, &b_pi3r_phi);
+   fChain->SetBranchAddress("pi1r_q", &pi1r_q, &b_pi1r_q);
+   fChain->SetBranchAddress("pi2r_q", &pi2r_q, &b_pi2r_q);
+   fChain->SetBranchAddress("pi3r_q", &pi3r_q, &b_pi3r_q);
    fChain->SetBranchAddress("flag", &flag, &b_flag);
    Notify();
 }
