@@ -72,6 +72,14 @@ void TauMatch::Loop()
    TH1F *h1mpipisbg = new TH1F("h1mpipisbg", "mpipi matched", 30, 0, 1.6);
    TH1F *h1mpipidbg = new TH1F("h1mpipisdg", "mpipi matched", 30, 0, 1.6);
 
+   TH1F *h1drsig = new TH1F("h1drsig", "dr 12 matched", 30, 0, 2);
+   TH1F *h1drbg = new TH1F("h1drbg", "dr 12 unmatched", 30, 0, 2);
+
+   TH1F *h1detasig = new TH1F("h1detesig", "deta 12 matched", 30, 0, 1.5);
+   TH1F *h1detabg = new TH1F("h1detebg", "deta 12 unmatched", 30, 0, 1.5);
+
+   TH1F *h1dphisig = new TH1F("h1dphisig", "dphi 12 matched", 30, 0, 1.5);
+   TH1F *h1dphibg = new TH1F("h1dphibg", "dphi 12 unmatched", 30, 0, 1.5);
 
    TH2F *h2drvsptsig = new TH2F("h2drvsptsignal", "dr vs pt signal", 50, 1, 10, 25, 0, 2);
    TH2F *h2drvsptbg = new TH2F("h2drvsptbg", "dr vs pt bg", 50, 1, 10, 25, 0, 2);
@@ -226,6 +234,9 @@ void TauMatch::Loop()
          h1weightpTdRsig->Fill(weighteddR);
          h1mrhosig->Fill(mrho);
          h1mpipisig->Fill(mpipi12);
+         h1drsig->Fill(dr12);
+         h1detasig->Fill(deta12);
+         h1dphisig->Fill(dphi12);
       }
       else
       {
@@ -248,9 +259,12 @@ void TauMatch::Loop()
          h1weightpTdRbg->Fill(weighteddR);
          h1mrhobg->Fill(mrho);
          if(pi1r_q == pi2r_q && pi2r_q == pi3r_q)
-            h1mpipisbg->Fill(mpipi12);
+            h1mpipisbg->Fill(mpipi12); // Useless as the above condition never statisfies
          else
             h1mpipidbg->Fill(mpipi12);
+         h1drbg->Fill(b_dr_max);
+         h1detabg->Fill(b_eta_max);
+         h1dphibg->Fill(b_phi_max);
       }
    }
 
@@ -398,7 +412,31 @@ void TauMatch::Loop()
    h1mpipisig->Draw();
    can18->cd(2);
    h1mpipidbg->Draw();
-   can18->SaveAs("mpipi.pdf");
+   // can18->SaveAs("mpipi.pdf");
+
+   TCanvas *can19 = new TCanvas("can19", "dr", 300,20,1000,750);
+   can19->Divide(1,2);
+   can19->cd(1);
+   h1drsig->Draw();
+   can19->cd(2);
+   h1drbg->Draw();
+   can19->SaveAs("dr.pdf");
+   
+   TCanvas *can20 = new TCanvas("can20", "deta", 300,20,1000,750);
+   can20->Divide(1,2);
+   can20->cd(1);
+   h1detasig->Draw();
+   can20->cd(2);
+   h1detabg->Draw();
+   can20->SaveAs("deta.pdf");
+
+   TCanvas *can21 = new TCanvas("can21", "dphi", 300,20,1000,750);
+   can21->Divide(1,2);
+   can21->cd(1);
+   h1dphisig->Draw();
+   can21->cd(2);
+   h1dphibg->Draw();
+   can21->SaveAs("dphi.pdf");
 }
 
 float TauMatch::deltaPhi(float phi1, float phi2) {
