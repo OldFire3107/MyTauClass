@@ -199,6 +199,36 @@ void MyTauClass::Loop()
         pir_q[2] = JpsiTau_tau_pi3_q->at(i);
 
         // To Do to sort all var in order of pirpt
+        if (pir_pt[0] < pir_pt[1])
+        {
+          SwapValue(pi_pt[0], pi_pt[1]);
+          SwapValue(pi_eta[0], pi_eta[1]);
+          SwapValue(pi_phi[0], pi_phi[1]);
+          SwapValue(pir_pt[0], pir_pt[1]);
+          SwapValue(pir_eta[0], pir_eta[1]);
+          SwapValue(pir_phi[0], pir_phi[1]);
+          SwapValue(pir_q[0], pir_q[1]);
+        }
+        if (pir_pt[0] < pir_pt[2])
+        {
+          SwapValue(pi_pt[0], pi_pt[2]);
+          SwapValue(pi_eta[0], pi_eta[2]);
+          SwapValue(pi_phi[0], pi_phi[2]);
+          SwapValue(pir_pt[0], pir_pt[2]);
+          SwapValue(pir_eta[0], pir_eta[2]);
+          SwapValue(pir_phi[0], pir_phi[2]);
+          SwapValue(pir_q[0], pir_q[2]);
+        }
+        if (pir_pt[1] < pir_pt[2])
+        {
+          SwapValue(pi_pt[1], pi_pt[2]);
+          SwapValue(pi_eta[1], pi_eta[2]);
+          SwapValue(pi_phi[1], pi_phi[2]);
+          SwapValue(pir_pt[1], pir_pt[2]);
+          SwapValue(pir_eta[1], pir_eta[2]);
+          SwapValue(pir_phi[1], pir_phi[2]);
+          SwapValue(pir_q[1], pir_q[2]);
+        }
 
         if(i == min_pos) 
           pi_flag = true; 
@@ -319,10 +349,10 @@ void MyTauClass::MegaLoop(const char *str)
 
         Init(tree);
         Loop();
-        // delete tree;
+        delete tree;
         // delete tree1;
         // delete FileOut;
-        // delete FileIn;
+        FileIn->Close();
       }
     }
   }
@@ -470,6 +500,13 @@ void MyTauClass::show(const char * file="final.root")
 void MyTauClass::SwapValue(Float_t &a, Float_t &b) 
 {
   Float_t t = a;
+  a = b;
+  b = t;
+}
+
+void MyTauClass::SwapValue(Int_t &a, Int_t &b) 
+{
+  Int_t t = a;
   a = b;
   b = t;
 }

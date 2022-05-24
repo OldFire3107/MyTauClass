@@ -8,7 +8,8 @@
 #ifndef TauMatch_h
 #define TauMatch_h
 
-#define PI_MASS 0.1396
+#define PI_MASS 0.1396 // GeV
+#define RHO_MASS 0.77 // GeV
 
 #include <TROOT.h>
 #include <TChain.h>
@@ -43,9 +44,9 @@ public :
    Float_t         pi1r_phi;
    Float_t         pi2r_phi;
    Float_t         pi3r_phi;
-   Float_t         pi1r_q;
-   Float_t         pi2r_q;
-   Float_t         pi3r_q;
+   Int_t           pi1r_q;
+   Int_t           pi2r_q;
+   Int_t           pi3r_q;
    Bool_t          flag;
 
    // List of branches

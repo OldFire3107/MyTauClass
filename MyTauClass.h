@@ -917,6 +917,7 @@ public :
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
    virtual void     SwapValue(Float_t &a, Float_t &b);
+   virtual void     SwapValue(Int_t &a, Int_t &b);
    virtual void     CombAdd(vector<vector<Int_t>>& comb, Int_t arr[3], int n);
    virtual float    deltaPhi(float phi1, float phi2);
    virtual Float_t  getDeltaR(Float_t eta1, Float_t phi1, Float_t eta2, Float_t phi2);

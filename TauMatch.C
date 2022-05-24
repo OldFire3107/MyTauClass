@@ -6,6 +6,7 @@
 #include <TH1F.h>
 #include <TMath.h>
 #include <TLorentzVector.h>
+#include <TLegend.h>
 #include <iostream>
 
 void TauMatch::Loop()
@@ -61,8 +62,16 @@ void TauMatch::Loop()
    TH1F *h1vismasssig = new TH1F("h1vismasssig", "vis_mass_matched", 20, 0,4);
    TH1F *h1vismassbg = new TH1F("h1vismassbg", "vis_mass_background", 20, 0,4);
 
-   TH1F *h1weightpTdRsig = new TH1F("h1weightpTdRsig", "", 30, 0, 3);
-   TH1F *h1weightpTdRbg = new TH1F("h1weightpTdRbg", "", 30, 0, 3);
+   TH1F *h1weightpTdRsig = new TH1F("h1weightpTdRsig", "dRij*(Pti+Ptj)/2Ptot sig", 30, 0, 3);
+   TH1F *h1weightpTdRbg = new TH1F("h1weightpTdRbg", "dRij*(Pti+Ptj)/2Ptot bg", 30, 0, 3);
+
+   TH1F *h1mrhosig = new TH1F("h1mrhosig", "mpipi closest to rho matched", 30, 0, 1.4);
+   TH1F *h1mrhobg = new TH1F("h1mrhobg", "mpipi closest to rho unmatched", 30, 0, 1.4);
+
+   TH1F *h1mpipisig = new TH1F("h1mpipisig", "mpipi matched", 30, 0, 1.6);
+   TH1F *h1mpipisbg = new TH1F("h1mpipisbg", "mpipi matched", 30, 0, 1.6);
+   TH1F *h1mpipidbg = new TH1F("h1mpipisdg", "mpipi matched", 30, 0, 1.6);
+
 
    TH2F *h2drvsptsig = new TH2F("h2drvsptsignal", "dr vs pt signal", 50, 1, 10, 25, 0, 2);
    TH2F *h2drvsptbg = new TH2F("h2drvsptbg", "dr vs pt bg", 50, 1, 10, 25, 0, 2);
@@ -100,7 +109,7 @@ void TauMatch::Loop()
       pi_ptg[0] = pi1_pt;
       pi_ptg[1] = pi2_pt;
       pi_ptg[2] = pi3_pt;
-      sort(pi_pt, pi_pt+3);
+      // sort(pi_pt, pi_pt+3);
       sort(pi_ptg, pi_ptg+3);
 
 
@@ -109,7 +118,7 @@ void TauMatch::Loop()
       P[1].SetPtEtaPhiM(pi2r_pt, pi2r_eta, pi2r_phi, PI_MASS);
       P[2].SetPtEtaPhiM(pi3r_pt, pi3r_eta, pi3r_phi, PI_MASS);
       TLorentzVector Invar = P[0] + P[1] + P[2];
-      Double_t vis_mass = Invar.Mag();
+      Double_t vis_mass = Invar.M();
       Double_t Pt_tot = Invar.Pt();
 
       Float_t dR_max = 0;
@@ -166,11 +175,32 @@ void TauMatch::Loop()
       b_phi_max = dphi31 > b_phi_max ? dphi31 : b_phi_max;
 
 
+      TLorentzVector P12 = P[0] + P[1];
+      TLorentzVector P23 = P[1] + P[2];
+      TLorentzVector P31 = P[2] + P[0];
+
+      Float_t weighteddR = dr12*P12.Pt() + dr23*P23.Pt() + dr31*P31.Pt();
+      weighteddR /= 2*Pt_tot;
+
+      Float_t mpipi12 = P12.M();
+      Float_t mpipi23 = P23.M();
+      Float_t mpipi31 = P31.M();
+
+      Float_t mrho, mindiff = 10;
+      if(abs(mindiff) > abs(mpipi12 - RHO_MASS) && pi1r_q * pi2r_q < 0) 
+         mindiff = mpipi12 - RHO_MASS;
+      if(abs(mindiff) > abs(mpipi23 - RHO_MASS) && pi2r_q * pi3r_q < 0) 
+         mindiff = mpipi23 - RHO_MASS;
+      if(abs(mindiff) > abs(mpipi31 - RHO_MASS) && pi3r_q * pi1r_q < 0) 
+         mindiff = mpipi31 - RHO_MASS;
+
+      mrho = mindiff + RHO_MASS;
+   
       if(flag)
       {
-         h1ratiosig1->Fill(pi_ptg[2]/Pt_tot);
-         h1ratiosig2->Fill(pi_ptg[1]/Pt_tot);
-         h1ratiosig3->Fill(pi_ptg[0]/Pt_tot);
+         h1ratiosig1->Fill(pi_pt[0]/Pt_tot);
+         h1ratiosig2->Fill(pi_pt[1]/Pt_tot);
+         h1ratiosig3->Fill(pi_pt[2]/Pt_tot);
          h1ratiosig4->Fill(Pt_tot/tau_pt);
          h1vismasssig->Fill(vis_mass);
          h1dpT->Fill((pi1_pt-pi1r_pt)/pi1_pt);
@@ -180,8 +210,8 @@ void TauMatch::Loop()
          h1dphi->Fill(dphi_max);
          h1dR->Fill(dR_max);
 
-         h1ratiosig5->Fill(pi_pt[2]/pi_pt[1]);
-         h1ratiosig6->Fill(pi_pt[1]/pi_pt[0]);
+         h1ratiosig5->Fill(pi_pt[0]/pi_pt[1]);
+         h1ratiosig6->Fill(pi_pt[1]/pi_pt[2]);
 
          h2resoptratio->Fill(pi1_pt, (pi1_pt-pi1r_pt)/pi1_pt);
          h2resoptratio->Fill(pi2_pt, (pi2_pt-pi2r_pt)/pi2_pt);
@@ -193,18 +223,21 @@ void TauMatch::Loop()
          // h2dr12vsptsig->Fill(Pt_tot, dr12);
          // h2dr23vsptsig->Fill(Pt_tot, dr23);
          // h2dr31vsptsig->Fill(Pt_tot, dr31);
+         h1weightpTdRsig->Fill(weighteddR);
+         h1mrhosig->Fill(mrho);
+         h1mpipisig->Fill(mpipi12);
       }
       else
       {
-         h1ratiobg1->Fill(pi_pt[2]/Pt_tot);
+         h1ratiobg1->Fill(pi_pt[0]/Pt_tot);
          h1ratiobg2->Fill(pi_pt[1]/Pt_tot);
-         h1ratiobg3->Fill(pi_pt[0]/Pt_tot);
+         h1ratiobg3->Fill(pi_pt[2]/Pt_tot);
          h1ratiobg4->Fill(Pt_tot/tau_pt);
          h1vismassbg->Fill(vis_mass);
 
 
-         h1ratiobg5->Fill(pi_pt[2]/pi_pt[1]);
-         h1ratiobg6->Fill(pi_pt[1]/pi_pt[0]);
+         h1ratiobg5->Fill(pi_pt[0]/pi_pt[1]);
+         h1ratiobg6->Fill(pi_pt[1]/pi_pt[2]);
 
          h2drvsptbg->Fill(Pt_tot, b_dr_max);
          h2detavsptbg->Fill(Pt_tot, b_eta_max);
@@ -212,6 +245,12 @@ void TauMatch::Loop()
          // h2dr12vsptbg->Fill(Pt_tot, dr12);
          // h2dr23vsptbg->Fill(Pt_tot, dr23);
          // h2dr31vsptbg->Fill(Pt_tot, dr31);
+         h1weightpTdRbg->Fill(weighteddR);
+         h1mrhobg->Fill(mrho);
+         if(pi1r_q == pi2r_q && pi2r_q == pi3r_q)
+            h1mpipisbg->Fill(mpipi12);
+         else
+            h1mpipidbg->Fill(mpipi12);
       }
    }
 
@@ -340,10 +379,26 @@ void TauMatch::Loop()
    TCanvas *can16 = new TCanvas("can16", "weighteddR", 300,20,1000,750);
    can16->Divide(1,2);
    can16->cd(1);
-   h1weightpTdRsig->Draw("colz");
+   h1weightpTdRsig->Draw();
    can16->cd(2);
-   h1weightpTdRbg->Draw("colz");
-   can16->SaveAs("weighteddR.pdf"); 
+   h1weightpTdRbg->Draw();
+   // can16->SaveAs("weighteddR.pdf"); 
+
+   TCanvas *can17 = new TCanvas("can17", "mrho", 300,20,1000,750);
+   can17->Divide(1,2);
+   can17->cd(1);
+   h1mrhosig->Draw();
+   can17->cd(2);
+   h1mrhobg->Draw();
+   // can17->SaveAs("mrho.pdf");
+
+   TCanvas *can18 = new TCanvas("can18", "mpipi", 300,20,1000,750);
+   can18->Divide(1,2);
+   can18->cd(1);
+   h1mpipisig->Draw();
+   can18->cd(2);
+   h1mpipidbg->Draw();
+   can18->SaveAs("mpipi.pdf");
 }
 
 float TauMatch::deltaPhi(float phi1, float phi2) {
