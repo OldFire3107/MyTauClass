@@ -1,15 +1,13 @@
-#include "MyTauClass/interface/MyTauClass.h"
-#include "MyTauClass/interface/TauMatch.h"
+#include "MyTauClass/TauClass/interface/MyTauClass.h"
+#include "MyTauClass/TauClass/interface/TauMatch.h"
 
 #include <iostream>
 
-int main(int argv, char* argc[])
+int main(int argc, char** argv)
 {
-    MyTauClass tc;
-    TauMatch   tm;
-    tc.MegaLoop(argc[0]);
-    // need to hadd those files
-    tc.show();
-    tm.Loop();
+    if(argc > 2){
+        MyTauClass tc(argv[1], argv[2]);
+        tc.Loop();
+    }
     return 0;
 }

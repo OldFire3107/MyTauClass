@@ -18,14 +18,11 @@
 #include <iostream>
 
 // Header file for the classes stored in the TTree if any.
-#include "vector"
-#include "vector"
-#include "vector"
-#include "vector"
-#include "map"
-#include "string"
-#include "vector"
-#include "vector"
+#include <vector>
+#include <map>
+#include <string>
+
+using namespace std;
 
 class MyTauClass {
 public :
@@ -914,7 +911,7 @@ public :
    virtual void     Init(TTree *tree);
    virtual void     InitOut();
    virtual void     Loop();
-   virtual void     show(const char*);
+   virtual void     show(const char* file="final.root");
    virtual void     MegaLoop(const char *str);
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);

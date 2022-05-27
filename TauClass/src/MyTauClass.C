@@ -1,5 +1,5 @@
 #define MyTauClass_cxx
-#include "MyTauClass/interface/MyTauClass.h"
+#include "MyTauClass/TauClass/interface/MyTauClass.h"
 #include <TCanvas.h>
 #include <TLegend.h>
 #include <TString.h>
@@ -110,7 +110,7 @@ void MyTauClass::Loop()
     
     // Comparing eta and phi since pt can be lost via Bremsstrahlung
     Float_t dR_min = 40;
-    int min_pos = -1;
+    size_t min_pos = -1;
 
     vector<vector<Int_t>> num_comb;
     Int_t num_comb_min[3] = {-1, -1, -1};
@@ -118,7 +118,7 @@ void MyTauClass::Loop()
     CombAdd(num_comb, input, 3);
 
     
-    for(int i=0; i < JpsiTau_tau_pi1_pt->size(); i++){
+    for(size_t i=0; i < JpsiTau_tau_pi1_pt->size(); i++){
       h1pt1->Fill(JpsiTau_tau_pi1_pt->at(i));
       h1pt2->Fill(JpsiTau_tau_pi2_pt->at(i));
       h1pt3->Fill(JpsiTau_tau_pi3_pt->at(i));
@@ -148,7 +148,7 @@ void MyTauClass::Loop()
               break;
             }
           }
-          if(dR_sum < dR_min)
+          if(dR_sum < dR_min && dR_sum < 0.05)
           {
             dR_min = dR_sum;
             min_pos = i;
@@ -184,7 +184,7 @@ void MyTauClass::Loop()
 
     if(JpsiTau_gen_tau_nprong->size()!=0 && int(JpsiTau_gen_tau_nprong->at(0) == 3))
     {
-      for(int i=0; i < JpsiTau_tau_pi1_pt->size(); i++){
+      for(size_t i=0; i < JpsiTau_tau_pi1_pt->size(); i++){
         pir_pt[0] = JpsiTau_tau_pi1_pt->at(i);
         pir_pt[1] = JpsiTau_tau_pi2_pt->at(i);
         pir_pt[2] = JpsiTau_tau_pi3_pt->at(i);
@@ -255,11 +255,11 @@ void MyTauClass::Loop()
     // sinec above 1 prong and 2 prong messeages were never printed it is
     // it is taken to be same
 
-    for(int i=0; i < JpsiTau_tau_pi1_pt->size(); i++){
+    for(size_t i=0; i < JpsiTau_tau_pi1_pt->size(); i++){
       h1ratio->Fill(JpsiTau_tau_pi1_pt->at(i)/JpsiTau_tau_pt->at(i));
     }
 
-    for(int i=0; i < JpsiTau_tau_pi1_pt->size(); i++){
+    for(size_t i=0; i < JpsiTau_tau_pi1_pt->size(); i++){
       if(JpsiTau_tau_pt->at(i) < 5.)
       {
         h15pt->Fill(JpsiTau_tau_max_dr_3prong->at(i));
@@ -370,7 +370,7 @@ void MyTauClass::MegaLoop(const char *str)
   }
 }
 
-void MyTauClass::show(const char * file="final.root")
+void MyTauClass::show(const char * file)
 {
 // Book here my histograms
   TFile *f = new TFile(file);

@@ -17,6 +17,8 @@
 
 // Header file for the classes stored in the TTree if any.
 
+using namespace std;
+
 class TauMatch {
 public :
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain

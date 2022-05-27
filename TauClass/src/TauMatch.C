@@ -1,5 +1,5 @@
 #define TauMatch_cxx
-#include "MyTauClass/interface/TauMatch.h"
+#include "MyTauClass/TauClass/interface/TauMatch.h"
 #include <TH2.h>
 #include <TStyle.h>
 #include <TCanvas.h>
@@ -8,6 +8,8 @@
 #include <TLorentzVector.h>
 #include <TLegend.h>
 #include <iostream>
+
+using namespace std;
 
 void TauMatch::Loop()
 {
