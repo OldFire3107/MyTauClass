@@ -870,6 +870,8 @@ public :
    Float_t        pir_eta[3];
    Float_t        pir_phi[3];
    Int_t          pir_q[3];
+   Float_t        pir_dce3d[3];
+   Float_t        pir_dz[3];
    Float_t        tau_true_pt;
    Bool_t         pi_flag;
    TTree          *tree1 = NULL;
@@ -1046,9 +1048,15 @@ void MyTauClass::InitOut()
    tree1->Branch("pi1r_phi", &pir_phi[0], "pi1r_phi/F");
    tree1->Branch("pi2r_phi", &pir_phi[1], "pi2r_phi/F");
    tree1->Branch("pi3r_phi", &pir_phi[2], "pi3r_phi/F");
-   tree1->Branch("pi1r_q", &pir_q[0], "pi1r_phi/I");
-   tree1->Branch("pi2r_q", &pir_q[1], "pi2r_phi/I");
-   tree1->Branch("pi3r_q", &pir_q[2], "pi3r_phi/I");
+   tree1->Branch("pi1r_q", &pir_q[0], "pi1r_q/I");
+   tree1->Branch("pi2r_q", &pir_q[1], "pi2r_q/I");
+   tree1->Branch("pi3r_q", &pir_q[2], "pi3r_q/I");
+   tree1->Branch("pi1r_dce3d", &pir_dce3d[0], "pi1r_dce3d/F");
+   tree1->Branch("pi2r_dce3d", &pir_dce3d[1], "pi2r_dce3d/F");
+   tree1->Branch("pi3r_dce3d", &pir_dce3d[2], "pi3r_dce3d/F");
+   tree1->Branch("pi1r_dz", &pir_dz[0], "pi1r_dz/F");
+   tree1->Branch("pi2r_dz", &pir_dz[1], "pi2r_dz/F");
+   tree1->Branch("pi3r_dz", &pir_dz[2], "pi3r_dz/F");
    tree1->Branch("flag", &pi_flag, "flag/O");
 
    if (h1pttau)

@@ -143,7 +143,7 @@ void MyTauClass::Loop()
           {
             dR = getDeltaR(pi_eta[in.at(j)], pi_phi[in.at(j)], pir_eta[j], pir_phi[j]);
             dR_sum += dR;
-            if (dR > 0.1)
+            if (dR > 0.05)
             {
               break;
             }
@@ -197,6 +197,12 @@ void MyTauClass::Loop()
         pir_q[0] = JpsiTau_tau_pi1_q->at(i);
         pir_q[1] = JpsiTau_tau_pi2_q->at(i);
         pir_q[2] = JpsiTau_tau_pi3_q->at(i);
+        pir_dce3d[0] = JpsiTau_tau_pi1_doca3d->at(i);
+        pir_dce3d[1] = JpsiTau_tau_pi2_doca3d->at(i);
+        pir_dce3d[2] = JpsiTau_tau_pi3_doca3d->at(i);
+        pir_dz[0] = JpsiTau_tau_pi1_dz->at(i);
+        pir_dz[1] = JpsiTau_tau_pi1_dz->at(i);
+        pir_dz[2] = JpsiTau_tau_pi1_dz->at(i);
 
         // To Do to sort all var in order of pirpt
         if (pir_pt[0] < pir_pt[1])
@@ -208,6 +214,8 @@ void MyTauClass::Loop()
           SwapValue(pir_eta[0], pir_eta[1]);
           SwapValue(pir_phi[0], pir_phi[1]);
           SwapValue(pir_q[0], pir_q[1]);
+          SwapValue(pir_dce3d[0], pir_dce3d[1]);
+          SwapValue(pir_dz[0], pir_dz[1]);
         }
         if (pir_pt[0] < pir_pt[2])
         {
@@ -218,6 +226,8 @@ void MyTauClass::Loop()
           SwapValue(pir_eta[0], pir_eta[2]);
           SwapValue(pir_phi[0], pir_phi[2]);
           SwapValue(pir_q[0], pir_q[2]);
+          SwapValue(pir_dce3d[0], pir_dce3d[2]);
+          SwapValue(pir_dz[0], pir_dz[2]);
         }
         if (pir_pt[1] < pir_pt[2])
         {
@@ -228,6 +238,8 @@ void MyTauClass::Loop()
           SwapValue(pir_eta[1], pir_eta[2]);
           SwapValue(pir_phi[1], pir_phi[2]);
           SwapValue(pir_q[1], pir_q[2]);
+          SwapValue(pir_dce3d[1], pir_dce3d[2]);
+          SwapValue(pir_dz[1], pir_dz[2]);
         }
 
         if(i == min_pos) 
