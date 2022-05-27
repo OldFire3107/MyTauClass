@@ -1,5 +1,5 @@
-#include "MyTauClass.h"
-#include "TauMatch.h"
+#include "MyTauClass/interface/MyTauClass.h"
+#include "MyTauClass/interface/TauMatch.h"
 
 #include <iostream>
 

@@ -1,5 +1,5 @@
 #define MyTauClass_cxx
-#include "MyTauClass.h"
+#include "MyTauClass/interface/MyTauClass.h"
 #include <TCanvas.h>
 #include <TLegend.h>
 #include <TString.h>
