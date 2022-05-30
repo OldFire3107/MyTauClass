@@ -992,11 +992,12 @@ MyTauClass::~MyTauClass()
    delete h1expt;
 
    delete tree1;
+   delete tree;
    delete FileIn;
    delete FileOut;
 
-   if (!fChain) return;
-   delete fChain->GetCurrentFile();
+   // if (!fChain) return;
+   // delete fChain->GetCurrentFile(); // seg fault sometimes since file already deleted
 }
 
 Int_t MyTauClass::GetEntry(Long64_t entry)
