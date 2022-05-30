@@ -867,7 +867,8 @@ public :
    Float_t        pir_eta[3];
    Float_t        pir_phi[3];
    Int_t          pir_q[3];
-   Float_t        pir_dce3d[3];
+   Float_t        pir_dce3d[3]; // same as doca, sry :)
+   Float_t        pir_doca3de[3];
    Float_t        pir_dz[3];
    Float_t        tau_true_pt;
    Bool_t         pi_flag;
@@ -1051,6 +1052,9 @@ void MyTauClass::InitOut()
    tree1->Branch("pi1r_doca3d", &pir_dce3d[0], "pi1r_doca3d/F"); // Jbypsi vetrex to pion vertex
    tree1->Branch("pi2r_doca3d", &pir_dce3d[1], "pi2r_doca3d/F");
    tree1->Branch("pi3r_doca3d", &pir_dce3d[2], "pi3r_doca3d/F");
+   tree1->Branch("pi1r_doca3de", &pir_doca3de[0], "pi1r_doca3de/F"); // Jbypsi vetrex to pion vertex
+   tree1->Branch("pi2r_doca3de", &pir_doca3de[1], "pi2r_doca3de/F");
+   tree1->Branch("pi3r_doca3de", &pir_doca3de[2], "pi3r_doca3de/F");
    tree1->Branch("pi1r_dz", &pir_dz[0], "pi1r_dz/F");
    tree1->Branch("pi2r_dz", &pir_dz[1], "pi2r_dz/F");
    tree1->Branch("pi3r_dz", &pir_dz[2], "pi3r_dz/F");

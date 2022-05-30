@@ -52,6 +52,9 @@ public :
    Float_t         pi1r_doca3d;
    Float_t         pi2r_doca3d;
    Float_t         pi3r_doca3d;
+   Float_t         pi1r_doca3de;
+   Float_t         pi2r_doca3de;
+   Float_t         pi3r_doca3de;
    Float_t         pi1r_dz;
    Float_t         pi2r_dz;
    Float_t         pi3r_dz;
@@ -83,6 +86,9 @@ public :
    TBranch        *b_pi1r_doca3d;   //!
    TBranch        *b_pi2r_doca3d;   //!
    TBranch        *b_pi3r_doca3d;   //!
+   TBranch        *b_pi1r_doca3de;   //!
+   TBranch        *b_pi2r_doca3de;   //!
+   TBranch        *b_pi3r_doca3de;   //!
    TBranch        *b_pi1r_dz;   //!
    TBranch        *b_pi2r_dz;   //!
    TBranch        *b_pi3r_dz;   //!
@@ -195,6 +201,9 @@ void TauMatch::Init(TTree *tree)
    fChain->SetBranchAddress("pi1r_doca3d", &pi1r_doca3d, &b_pi1r_doca3d);
    fChain->SetBranchAddress("pi2r_doca3d", &pi2r_doca3d, &b_pi2r_doca3d);
    fChain->SetBranchAddress("pi3r_doca3d", &pi3r_doca3d, &b_pi3r_doca3d);
+   fChain->SetBranchAddress("pi1r_doca3de", &pi1r_doca3de, &b_pi1r_doca3de);
+   fChain->SetBranchAddress("pi2r_doca3de", &pi2r_doca3de, &b_pi2r_doca3de);
+   fChain->SetBranchAddress("pi3r_doca3de", &pi3r_doca3de, &b_pi3r_doca3de);
    fChain->SetBranchAddress("pi1r_dz", &pi1r_dz, &b_pi1r_dz);
    fChain->SetBranchAddress("pi2r_dz", &pi2r_dz, &b_pi2r_dz);
    fChain->SetBranchAddress("pi3r_dz", &pi3r_dz, &b_pi3r_dz);

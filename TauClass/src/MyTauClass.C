@@ -111,6 +111,7 @@ void MyTauClass::Loop()
     // Comparing eta and phi since pt can be lost via Bremsstrahlung
     Float_t dR_min = 40;
     size_t min_pos = -1;
+    Int_t dups_count = 0;
 
     vector<vector<Int_t>> num_comb;
     Int_t num_comb_min[3] = {-1, -1, -1};
@@ -150,6 +151,7 @@ void MyTauClass::Loop()
           }
           if(dR_sum < dR_min && dR_sum < 0.05)
           {
+            dups_count++;
             dR_min = dR_sum;
             min_pos = i;
             num_comb_min[0]=in.at(0);
@@ -200,6 +202,9 @@ void MyTauClass::Loop()
         pir_dce3d[0] = JpsiTau_tau_pi1_doca3d->at(i);
         pir_dce3d[1] = JpsiTau_tau_pi2_doca3d->at(i);
         pir_dce3d[2] = JpsiTau_tau_pi3_doca3d->at(i);
+        pir_doca3de[0] = JpsiTau_tau_pi1_doca3de->at(i);
+        pir_doca3de[1] = JpsiTau_tau_pi2_doca3de->at(i);
+        pir_doca3de[2] = JpsiTau_tau_pi3_doca3de->at(i);
         pir_dz[0] = JpsiTau_tau_pi1_dz->at(i);
         pir_dz[1] = JpsiTau_tau_pi1_dz->at(i);
         pir_dz[2] = JpsiTau_tau_pi1_dz->at(i);
@@ -277,6 +282,8 @@ void MyTauClass::Loop()
         h1expt->Fill(JpsiTau_tau_max_dr_3prong->at(i));
       }
     }
+
+    cout << "Duplicates: " << dups_count << endl;
 
   } // end loop on events
 
