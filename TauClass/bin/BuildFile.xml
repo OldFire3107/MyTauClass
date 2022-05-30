@@ -1,5 +1,5 @@
 <Flags CXXFLAGS="-Wno-unused-variable -Wno-error=unused-but-set-variable -Wno-error=maybe-uninitialized" />
-<bin name="run" file="main.cc">
+<bin name="run_gen" file="main.cc">
  <use name="rootgraphics"/>
  <use name="root"/>
  <use name="rootmath"/>
@@ -9,7 +9,7 @@
  <use name="MyTauClass/TauClass"/>
  <lib name="stdc++fs" />
 </bin>
-<bin name="run2" file="main2.cc">
+<bin name="run_plot" file="main2.cc">
  <use name="rootgraphics"/>
  <use name="root"/>
  <use name="rootmath"/>

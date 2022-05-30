@@ -7,8 +7,8 @@ int main(int argc, char** argv)
 {
     if(argc > 1){
     MyTauClass tc;
-    TauMatch   tm(argv);
-        tc.show(argv);
+    TauMatch   tm(argv[1]);
+        tc.show(argv[1]);
         tm.Loop();
     }
     return 0;

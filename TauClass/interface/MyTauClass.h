@@ -1048,9 +1048,9 @@ void MyTauClass::InitOut()
    tree1->Branch("pi1r_q", &pir_q[0], "pi1r_q/I");
    tree1->Branch("pi2r_q", &pir_q[1], "pi2r_q/I");
    tree1->Branch("pi3r_q", &pir_q[2], "pi3r_q/I");
-   tree1->Branch("pi1r_dce3d", &pir_dce3d[0], "pi1r_dce3d/F");
-   tree1->Branch("pi2r_dce3d", &pir_dce3d[1], "pi2r_dce3d/F");
-   tree1->Branch("pi3r_dce3d", &pir_dce3d[2], "pi3r_dce3d/F");
+   tree1->Branch("pi1r_doca3d", &pir_dce3d[0], "pi1r_doca3d/F"); // Jbypsi vetrex to pion vertex
+   tree1->Branch("pi2r_doca3d", &pir_dce3d[1], "pi2r_doca3d/F");
+   tree1->Branch("pi3r_doca3d", &pir_dce3d[2], "pi3r_doca3d/F");
    tree1->Branch("pi1r_dz", &pir_dz[0], "pi1r_dz/F");
    tree1->Branch("pi2r_dz", &pir_dz[1], "pi2r_dz/F");
    tree1->Branch("pi3r_dz", &pir_dz[2], "pi3r_dz/F");
