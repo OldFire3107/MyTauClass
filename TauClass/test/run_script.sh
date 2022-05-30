@@ -1,13 +1,15 @@
-#!/bin/bash
+#!/bin/sh
 
 mkdir files
+source /cvmfs/cms.cern.ch/cmsset_default.sh
+export SCRAM_ARCH=slc7_amd64_gcc700
+cd ${CMSSW_BASE}/src
+cmsenv
+cd -
 
-for filename in /pnfs/desy.de/cms/tier2/store/user/acardini/ntuples/lowpt/*.root; do
-    name=$(basename ${filename})
-    echo ${name}
-    ./run_gen ${filename} ${name//[^0-9]/}
+for i in i in {1..299..$2}
+    ./NohupParser.sh $1 ${i} $(expr ${i} + $2)
 done
 
 hadd -f final.root files/histos_*.root
-./run_plot final.root
-    
+run_plot final.root
