@@ -7,3 +7,6 @@ files/
 *.png
 *_C_ACLiC_*
 .vscode
+.n*
+*jobs/
+

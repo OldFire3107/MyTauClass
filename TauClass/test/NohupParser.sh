@@ -4,8 +4,9 @@
 # $3 - last index
 
 cat > jobs/runfrom${2}to${3}.sh <<EOF1
-for i in {$2..$3..1}
-    run_gen $1/flatTuple_${i}.root ${i}
+for i in {$2..$3}; do
+    echo \${i}
+    run_gen $1/flatTuple_\${i}.root \${i}
 done
 EOF1
 
