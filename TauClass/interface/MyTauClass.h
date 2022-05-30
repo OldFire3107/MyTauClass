@@ -992,7 +992,6 @@ MyTauClass::~MyTauClass()
    delete h1expt;
 
    delete tree1;
-   delete tree;
    delete FileIn;
    delete FileOut;
 
