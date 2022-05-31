@@ -59,6 +59,8 @@ public :
    Float_t         pi2r_dz;
    Float_t         pi3r_dz;
    Bool_t          flag;
+   Bool_t          dup_flag;
+   Int_t           dups_count;
 
    // List of branches
    TBranch        *b_pi1_pt;   //!
@@ -93,6 +95,8 @@ public :
    TBranch        *b_pi2r_dz;   //!
    TBranch        *b_pi3r_dz;   //!
    TBranch        *b_flag;   //!
+   TBranch        *b_dup_flag;   //!
+   TBranch        *b_dups_count;   //!
 
    TauMatch(TTree *tree=0);
    TauMatch(const char *file);
@@ -208,6 +212,8 @@ void TauMatch::Init(TTree *tree)
    fChain->SetBranchAddress("pi2r_dz", &pi2r_dz, &b_pi2r_dz);
    fChain->SetBranchAddress("pi3r_dz", &pi3r_dz, &b_pi3r_dz);
    fChain->SetBranchAddress("flag", &flag, &b_flag);
+   fChain->SetBranchAddress("dup_flag", &dup_flag, &b_dup_flag);
+   fChain->SetBranchAddress("dups_count", &dups_count, &b_dups_count);
    Notify();
 }
 

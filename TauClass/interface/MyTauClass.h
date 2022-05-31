@@ -872,6 +872,8 @@ public :
    Float_t        pir_dz[3];
    Float_t        tau_true_pt;
    Bool_t         pi_flag;
+   Bool_t         dup_flag;
+   Int_t          dups_count;
    TTree          *tree1 = NULL;
 
    // Book here my histograms
@@ -1059,6 +1061,8 @@ void MyTauClass::InitOut()
    tree1->Branch("pi2r_dz", &pir_dz[1], "pi2r_dz/F");
    tree1->Branch("pi3r_dz", &pir_dz[2], "pi3r_dz/F");
    tree1->Branch("flag", &pi_flag, "flag/O");
+   tree1->Branch("dup_flag", &dup_flag, "dup_flag/O");
+   tree1->Branch("dups_count", &dups_count, "dups_count/I");
 
    if (h1pttau)
    {

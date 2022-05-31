@@ -111,9 +111,11 @@ void MyTauClass::Loop()
     // Comparing eta and phi since pt can be lost via Bremsstrahlung
     Float_t dR_min = 40;
     size_t min_pos = -1;
-    Int_t dups_count = 0;
+    dups_count = 0;
 
     vector<vector<Int_t>> num_comb;
+    vector<vector<Int_t>> num_comb_satis;
+    vector<Int_t> num_satis;
     Int_t num_comb_min[3] = {-1, -1, -1};
     Int_t input[3] = {0, 1, 2};
     CombAdd(num_comb, input, 3);
@@ -151,12 +153,18 @@ void MyTauClass::Loop()
           }
           if(dR_sum < dR_min && dR_sum < 0.05)
           {
+            vector<Int_t> num_comb_satis_row;
             dups_count++;
             dR_min = dR_sum;
             min_pos = i;
+            num_satis.push_back(i);
             num_comb_min[0]=in.at(0);
             num_comb_min[1]=in.at(1);
             num_comb_min[2]=in.at(2);
+            num_comb_satis_row.push_back(in.at(0));
+            num_comb_satis_row.push_back(in.at(1));
+            num_comb_satis_row.push_back(in.at(2));
+            num_comb_satis.push_back(num_comb_satis_row);
           }
         }
       }
@@ -208,6 +216,7 @@ void MyTauClass::Loop()
         pir_dz[0] = JpsiTau_tau_pi1_dz->at(i);
         pir_dz[1] = JpsiTau_tau_pi1_dz->at(i);
         pir_dz[2] = JpsiTau_tau_pi1_dz->at(i);
+        dup_flag = false;
 
         // To Do to sort all var in order of pirpt
         if (pir_pt[0] < pir_pt[1])
@@ -247,10 +256,19 @@ void MyTauClass::Loop()
           SwapValue(pir_dz[1], pir_dz[2]);
         }
 
-        if(i == min_pos) 
+        if(i == min_pos)
           pi_flag = true; 
         else 
           pi_flag = false;
+        
+        for(auto pos: num_satis)
+        {
+          if(i == pos)
+          {
+            dup_flag = true;
+            break;
+          }
+        }
 
         tree1->Fill();
       }
@@ -282,8 +300,6 @@ void MyTauClass::Loop()
         h1expt->Fill(JpsiTau_tau_max_dr_3prong->at(i));
       }
     }
-
-    cout << "Duplicates: " << dups_count << endl;
 
   } // end loop on events
 
