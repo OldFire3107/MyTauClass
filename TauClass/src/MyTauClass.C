@@ -115,7 +115,7 @@ void MyTauClass::Loop()
 
     vector<vector<Int_t>> num_comb;
     vector<vector<Int_t>> num_comb_satis;
-    vector<Int_t> num_satis;
+    vector<size_t> num_satis;
     Int_t num_comb_min[3] = {-1, -1, -1};
     Int_t input[3] = {0, 1, 2};
     CombAdd(num_comb, input, 3);
@@ -154,7 +154,6 @@ void MyTauClass::Loop()
           if(dR_sum < dR_min && dR_sum < 0.05)
           {
             vector<Int_t> num_comb_satis_row;
-            dups_count++;
             dR_min = dR_sum;
             min_pos = i;
             num_satis.push_back(i);
@@ -191,6 +190,7 @@ void MyTauClass::Loop()
     pi_phi[1] = temp_transfer[1];
     pi_phi[2] = temp_transfer[2];
 
+    dups_count = (Int_t)num_satis.size();
 
     if(JpsiTau_gen_tau_nprong->size()!=0 && int(JpsiTau_gen_tau_nprong->at(0) == 3))
     {
@@ -261,7 +261,7 @@ void MyTauClass::Loop()
         else 
           pi_flag = false;
         
-        for(auto pos: num_satis)
+        for(const auto& pos: num_satis)
         {
           if(i == pos)
           {
