@@ -151,15 +151,20 @@ void MyTauClass::Loop()
               break;
             }
           }
-          if(dR_sum < dR_min && dR_sum < 0.05)
+          if(dR_sum < 0.05)
           {
             vector<Int_t> num_comb_satis_row;
-            dR_min = dR_sum;
-            min_pos = i;
+            dups_count++;
             num_satis.push_back(i);
-            num_comb_min[0]=in.at(0);
-            num_comb_min[1]=in.at(1);
-            num_comb_min[2]=in.at(2);
+
+            if(dR_sum < dR_min){
+              dR_min = dR_sum;
+              min_pos = i;
+              
+              num_comb_min[0]=in.at(0);
+              num_comb_min[1]=in.at(1);
+              num_comb_min[2]=in.at(2);
+            }
             num_comb_satis_row.push_back(in.at(0));
             num_comb_satis_row.push_back(in.at(1));
             num_comb_satis_row.push_back(in.at(2));
@@ -300,7 +305,8 @@ void MyTauClass::Loop()
         h1expt->Fill(JpsiTau_tau_max_dr_3prong->at(i));
       }
     }
-
+    
+    cout << "Duplicates: " << dups_count;
   } // end loop on events
 
   FileOut->cd();
