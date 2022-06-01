@@ -287,7 +287,7 @@ void TauMatch::Loop()
    h1ratiosig1->Draw();
    can1->cd(2);
    h1ratiobg1->Draw();
-   // can1->SaveAs("pT1Ratios_vis.pdf");
+   can1->SaveAs("pT1Ratios_vis.pdf");
 
    TCanvas *can2 = new TCanvas("can2","Difference",200,10,1400,1000);
    can2->Divide(2,2);
@@ -299,7 +299,7 @@ void TauMatch::Loop()
    h1dphi->Draw();
    can2->cd(4);
    h1dR->Draw();
-   // can2->SaveAs("DeltaStuff.pdf");
+   can2->SaveAs("DeltaStuff.pdf");
 
    TCanvas *can3 = new TCanvas("can3", "Ratios2_signbg_vis", 300,20,1000,750);
    can3->Divide(1,2);
@@ -307,7 +307,7 @@ void TauMatch::Loop()
    h1ratiosig2->Draw();
    can3->cd(2);
    h1ratiobg2->Draw();
-   // can3->SaveAs("pT2Ratios_vis.pdf");
+   can3->SaveAs("pT2Ratios_vis.pdf");
 
    TCanvas *can4 = new TCanvas("can4", "Ratios3_signbg_vis", 300,20,1000,750);
    can4->Divide(1,2);
@@ -315,7 +315,7 @@ void TauMatch::Loop()
    h1ratiosig3->Draw();
    can4->cd(2);
    h1ratiobg3->Draw();
-   // can4->SaveAs("pT3Ratios_vis.pdf");
+   can4->SaveAs("pT3Ratios_vis.pdf");
 
    TCanvas *can5 = new TCanvas("can5", "Ratios4_signbg_vis", 300,20,1000,750);
    can5->Divide(1,2);
@@ -323,7 +323,7 @@ void TauMatch::Loop()
    h1ratiosig4->Draw();
    can5->cd(2);
    h1ratiobg4->Draw();
-   // can5->SaveAs("pT4Ratios_vis.pdf");
+   can5->SaveAs("pT4Ratios_vis.pdf");
 
    TCanvas *can6 = new TCanvas("can6", "vis_mass", 300,20,1000,750);
    can6->Divide(1,2);
@@ -331,7 +331,7 @@ void TauMatch::Loop()
    h1vismasssig->Draw();
    can6->cd(2);
    h1vismassbg->Draw();
-   // can6->SaveAs("vis_mass.pdf");
+   can6->SaveAs("vis_mass.pdf");
 
    TCanvas *can7 = new TCanvas("can7", "dr_vs_pT", 300,20,1000,750);
    can7->Divide(1,2);
@@ -339,7 +339,7 @@ void TauMatch::Loop()
    h2drvsptsig->Draw("colz");
    can7->cd(2);
    h2drvsptbg->Draw("colz");
-   // can7->SaveAs("dr_vs_pT.pdf");
+   can7->SaveAs("dr_vs_pT.pdf");
 
    // TCanvas *can8 = new TCanvas("can8", "dr12_vs_pT", 300,20,1000,750);
    // can8->Divide(1,2);
@@ -367,7 +367,7 @@ void TauMatch::Loop()
 
    TCanvas *can11 = new TCanvas("can11", "dptresvspt", 300,20,1000,750);
    h2resoptratio->Draw("colz");
-   // can11->SaveAs("dptresovspt.pdf");
+   can11->SaveAs("dptresovspt.pdf");
 
    TCanvas *can12 = new TCanvas("can12", "pt_pi1/pt_pi2", 300,20,1000,750);
    can12->Divide(1,2);
@@ -375,7 +375,7 @@ void TauMatch::Loop()
    h1ratiosig5->Draw("colz");
    can12->cd(2);
    h1ratiobg5->Draw("colz");
-   // can12->SaveAs("1by2.pdf");  
+   can12->SaveAs("1by2.pdf");  
 
    TCanvas *can13 = new TCanvas("can13", "pt_pi2/pt_pi3", 300,20,1000,750);
    can13->Divide(1,2);
@@ -383,7 +383,7 @@ void TauMatch::Loop()
    h1ratiosig6->Draw("colz");
    can13->cd(2);
    h1ratiobg6->Draw("colz");
-   // can13->SaveAs("2by3.pdf"); 
+   can13->SaveAs("2by3.pdf"); 
 
    TCanvas *can14 = new TCanvas("can14", "deta_vs_pT", 300,20,1000,750);
    can14->Divide(1,2);
@@ -391,7 +391,7 @@ void TauMatch::Loop()
    h2detavsptsig->Draw("colz");
    can14->cd(2);
    h2detavsptbg->Draw("colz");
-   // can14->SaveAs("deta_vs_pT.pdf"); 
+   can14->SaveAs("deta_vs_pT.pdf"); 
 
    TCanvas *can15 = new TCanvas("can15", "dphi_vs_pT", 300,20,1000,750);
    can15->Divide(1,2);
@@ -399,7 +399,7 @@ void TauMatch::Loop()
    h2dphivsptsig->Draw("colz");
    can15->cd(2);
    h2dphivsptbg->Draw("colz");
-   // can15->SaveAs("dphi_vs_pT.pdf"); 
+   can15->SaveAs("dphi_vs_pT.pdf"); 
 
    TCanvas *can16 = new TCanvas("can16", "weighteddR", 300,20,1000,750);
    can16->Divide(1,2);
@@ -407,7 +407,7 @@ void TauMatch::Loop()
    h1weightpTdRsig->Draw();
    can16->cd(2);
    h1weightpTdRbg->Draw();
-   // can16->SaveAs("weighteddR.pdf"); 
+   can16->SaveAs("weighteddR.pdf"); 
 
    TCanvas *can17 = new TCanvas("can17", "mrho", 300,20,1000,750);
    can17->Divide(1,2);
@@ -415,7 +415,7 @@ void TauMatch::Loop()
    h1mrhosig->Draw();
    can17->cd(2);
    h1mrhobg->Draw();
-   // can17->SaveAs("mrho.pdf");
+   can17->SaveAs("mrho.pdf");
 
    TCanvas *can18 = new TCanvas("can18", "mpipi", 300,20,1000,750);
    can18->Divide(1,2);
@@ -423,7 +423,7 @@ void TauMatch::Loop()
    h1mpipisig->Draw();
    can18->cd(2);
    h1mpipidbg->Draw();
-   // can18->SaveAs("mpipi.pdf");
+   can18->SaveAs("mpipi.pdf");
 
    TCanvas *can19 = new TCanvas("can19", "dr", 300,20,1000,750);
    can19->Divide(1,2);
@@ -431,7 +431,7 @@ void TauMatch::Loop()
    h1drsig->Draw();
    can19->cd(2);
    h1drbg->Draw();
-   // can19->SaveAs("dr.pdf");
+   can19->SaveAs("dr.pdf");
    
    TCanvas *can20 = new TCanvas("can20", "deta", 300,20,1000,750);
    can20->Divide(1,2);
@@ -439,7 +439,7 @@ void TauMatch::Loop()
    h1detasig->Draw();
    can20->cd(2);
    h1detabg->Draw();
-   // can20->SaveAs("deta.pdf");
+   can20->SaveAs("deta.pdf");
 
    TCanvas *can21 = new TCanvas("can21", "dphi", 300,20,1000,750);
    can21->Divide(1,2);
@@ -447,7 +447,7 @@ void TauMatch::Loop()
    h1dphisig->Draw();
    can21->cd(2);
    h1dphibg->Draw();
-   // can21->SaveAs("dphi.pdf");
+   can21->SaveAs("dphi.pdf");
 
    TCanvas *can22 = new TCanvas("can22", "dz", 300,20,1000,750);
    can22->Divide(1,2);

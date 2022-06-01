@@ -40,7 +40,6 @@ void MyTauClass::Loop()
 
     // h1pttau->Fill(JpsiTau_tau_pt->at(0));
     if(JpsiTau_gen_tau_pt->size()!=0){
-      unsigned int sum = 0;
       if(JpsiTau_gen_tau_pt->at(0)>1.){ 
         tau_true_pt=JpsiTau_gen_tau_pt->at(0);
         h1pttau->Fill(tau_true_pt);
@@ -59,23 +58,23 @@ void MyTauClass::Loop()
 
         if (int(JpsiTau_gen_tau_nprong->at(0) == 2))
         {
-          max_dr = getDeltaR(JpsiTau_gen_pion_eta->at(sum), JpsiTau_gen_pion_phi->at(sum), JpsiTau_gen_pion_eta->at(sum+1), JpsiTau_gen_pion_phi->at(sum+1));
+          max_dr = getDeltaR(JpsiTau_gen_pion_eta->at(0), JpsiTau_gen_pion_phi->at(0), JpsiTau_gen_pion_eta->at(1), JpsiTau_gen_pion_phi->at(1));
           h2dRpt->Fill(JpsiTau_gen_tau_pt->at(0), max_dr);
         }
 
-        for(int j=0; j < int(JpsiTau_gen_tau_nprong->at(0)); j++, sum++){
+        for(int j=0; j < int(JpsiTau_gen_tau_nprong->at(0)); j++){
           
           if (int(JpsiTau_gen_tau_nprong->at(0) == 3))
           {
-            pi_pt[j] = JpsiTau_gen_pion_pt->at(sum);
-            pi_eta[j] = JpsiTau_gen_pion_eta->at(sum);
-            pi_phi[j] = JpsiTau_gen_pion_phi->at(sum);
+            pi_pt[j] = JpsiTau_gen_pion_pt->at(j);
+            pi_eta[j] = JpsiTau_gen_pion_eta->at(j);
+            pi_phi[j] = JpsiTau_gen_pion_phi->at(j);
             eta[j] = pi_eta[j];
             phi[j] = pi_phi[j];
           }
-          h1ptpi->Fill(JpsiTau_gen_pion_pt->at(sum));
-          h1etapi->Fill(JpsiTau_gen_pion_eta->at(sum));
-          h1phipi->Fill(JpsiTau_gen_pion_phi->at(sum));
+          h1ptpi->Fill(JpsiTau_gen_pion_pt->at(j));
+          h1etapi->Fill(JpsiTau_gen_pion_eta->at(j));
+          h1phipi->Fill(JpsiTau_gen_pion_phi->at(j));
         }
 
         if (int(JpsiTau_gen_tau_nprong->at(0) == 3))
@@ -106,6 +105,8 @@ void MyTauClass::Loop()
     
     // Comparing eta and phi since pt can be lost via Bremsstrahlung
     Float_t dR_min = 40;
+    // size_t -1 underflows to a positive number but only max 12 candidates are stored so it
+    // never exceeds 11. Which is why -1 is just convinent.
     size_t min_pos = -1;
     dups_count = 0;
 
@@ -132,8 +133,8 @@ void MyTauClass::Loop()
       pir_phi[2] = JpsiTau_tau_pi3_phi->at(i);
       pi_flag = false;
 
-      for(const auto& in: num_comb){
-        if(JpsiTau_gen_tau_nprong->size()!=0 && int(JpsiTau_gen_tau_nprong->at(0) == 3))
+      for(vector<Int_t> in: num_comb){
+        if(JpsiTau_gen_tau_nprong->size()!=0 && int(JpsiTau_gen_tau_nprong->at(0)) == 3)
         {
           pi_flag = true;
           Float_t dR = 0;
@@ -141,7 +142,7 @@ void MyTauClass::Loop()
           Float_t pT_res = 0; // for very rare cases
           for(int j=0; j < 3; j++)
           {
-            pT_res += abs(pi_pt[in.at(j)] - pir_pt[j])/pi_pt[in.at(j)];
+            pT_res = abs(pi_pt[in.at(j)] - pir_pt[j])/pi_pt[in.at(j)];
             dR = getDeltaR(pi_eta[in.at(j)], pi_phi[in.at(j)], pir_eta[j], pir_phi[j]);
             dR_sum += dR;
             if (dR > 0.05 || pT_res > 0.2)
@@ -173,25 +174,28 @@ void MyTauClass::Loop()
     }
 
     // Making it match
-    Float_t temp_transfer[3];
-    temp_transfer[0] = pi_pt[num_comb_min[0]];
-    temp_transfer[1] = pi_pt[num_comb_min[1]];
-    temp_transfer[2] = pi_pt[num_comb_min[2]];
-    pi_pt[0] = temp_transfer[0];
-    pi_pt[1] = temp_transfer[1];
-    pi_pt[2] = temp_transfer[2];
-    temp_transfer[0] = pi_eta[num_comb_min[0]];
-    temp_transfer[1] = pi_eta[num_comb_min[1]];
-    temp_transfer[2] = pi_eta[num_comb_min[2]];
-    pi_eta[0] = temp_transfer[0];
-    pi_eta[1] = temp_transfer[1];
-    pi_eta[2] = temp_transfer[2];
-    temp_transfer[0] = pi_phi[num_comb_min[0]];
-    temp_transfer[1] = pi_phi[num_comb_min[1]];
-    temp_transfer[2] = pi_phi[num_comb_min[2]];
-    pi_phi[0] = temp_transfer[0];
-    pi_phi[1] = temp_transfer[1];
-    pi_phi[2] = temp_transfer[2];
+    if(min_pos != (size_t)-1) // see min pos declaration for why -1
+    {
+      Float_t temp_transfer[3];
+      temp_transfer[0] = pi_pt[num_comb_min[0]];
+      temp_transfer[1] = pi_pt[num_comb_min[1]];
+      temp_transfer[2] = pi_pt[num_comb_min[2]];
+      pi_pt[0] = temp_transfer[0];
+      pi_pt[1] = temp_transfer[1];
+      pi_pt[2] = temp_transfer[2];
+      temp_transfer[0] = pi_eta[num_comb_min[0]];
+      temp_transfer[1] = pi_eta[num_comb_min[1]];
+      temp_transfer[2] = pi_eta[num_comb_min[2]];
+      pi_eta[0] = temp_transfer[0];
+      pi_eta[1] = temp_transfer[1];
+      pi_eta[2] = temp_transfer[2];
+      temp_transfer[0] = pi_phi[num_comb_min[0]];
+      temp_transfer[1] = pi_phi[num_comb_min[1]];
+      temp_transfer[2] = pi_phi[num_comb_min[2]];
+      pi_phi[0] = temp_transfer[0];
+      pi_phi[1] = temp_transfer[1];
+      pi_phi[2] = temp_transfer[2];
+    }
     dups_count = num_satis.size();
 
     if(JpsiTau_gen_tau_nprong->size()!=0 && int(JpsiTau_gen_tau_nprong->at(0) == 3))
@@ -223,9 +227,9 @@ void MyTauClass::Loop()
         // To Do to sort all var in order of pirpt
         if (pir_pt[0] < pir_pt[1])
         {
-          SwapValue(pi_pt[0], pi_pt[1]);
-          SwapValue(pi_eta[0], pi_eta[1]);
-          SwapValue(pi_phi[0], pi_phi[1]);
+          // SwapValue(pi_pt[0], pi_pt[1]);
+          // SwapValue(pi_eta[0], pi_eta[1]);
+          // SwapValue(pi_phi[0], pi_phi[1]);
           SwapValue(pir_pt[0], pir_pt[1]);
           SwapValue(pir_eta[0], pir_eta[1]);
           SwapValue(pir_phi[0], pir_phi[1]);
@@ -235,9 +239,9 @@ void MyTauClass::Loop()
         }
         if (pir_pt[0] < pir_pt[2])
         {
-          SwapValue(pi_pt[0], pi_pt[2]);
-          SwapValue(pi_eta[0], pi_eta[2]);
-          SwapValue(pi_phi[0], pi_phi[2]);
+          // SwapValue(pi_pt[0], pi_pt[2]);
+          // SwapValue(pi_eta[0], pi_eta[2]);
+          // SwapValue(pi_phi[0], pi_phi[2]);
           SwapValue(pir_pt[0], pir_pt[2]);
           SwapValue(pir_eta[0], pir_eta[2]);
           SwapValue(pir_phi[0], pir_phi[2]);
@@ -247,9 +251,9 @@ void MyTauClass::Loop()
         }
         if (pir_pt[1] < pir_pt[2])
         {
-          SwapValue(pi_pt[1], pi_pt[2]);
-          SwapValue(pi_eta[1], pi_eta[2]);
-          SwapValue(pi_phi[1], pi_phi[2]);
+          // SwapValue(pi_pt[1], pi_pt[2]);
+          // SwapValue(pi_eta[1], pi_eta[2]);
+          // SwapValue(pi_phi[1], pi_phi[2]);
           SwapValue(pir_pt[1], pir_pt[2]);
           SwapValue(pir_eta[1], pir_eta[2]);
           SwapValue(pir_phi[1], pir_phi[2]);
