@@ -16,12 +16,13 @@ void MyTauClass::Loop()
 {
   // FileIn->cd();
   if (fChain == 0) return;
-  Int_t ievent=0;
+  Long64_t ievent=0;
+  Long64_t out_entry=0;
 
   Long64_t nentries = fChain->GetEntriesFast();
 
   Long64_t nbytes = 0, nb = 0;
-
+  
   //f->Close();
 
   // TH1F *h1nprong = new TH1F("h1nprong","nprong of the tau",4,0,4);
@@ -89,12 +90,7 @@ void MyTauClass::Loop()
           h2dRpt->Fill(JpsiTau_gen_tau_pt->at(0), max_dr);
         }
         
-      }
-      else
-      {
-        sum+=int(JpsiTau_gen_tau_nprong->at(0));
-      }
-
+      }        
     }/*
     // count pfCand 
     if(pfCand_pt->size()>0){
@@ -114,8 +110,8 @@ void MyTauClass::Loop()
     dups_count = 0;
 
     vector<vector<Int_t>> num_comb;
-    vector<vector<Int_t>> num_comb_satis;
-    vector<size_t> num_satis;
+    // vector<vector<Int_t>> num_comb_satis;
+    set<size_t> num_satis;
     Int_t num_comb_min[3] = {-1, -1, -1};
     Int_t input[3] = {0, 1, 2};
     CombAdd(num_comb, input, 3);
@@ -153,9 +149,9 @@ void MyTauClass::Loop()
           }
           if(dR_sum < 0.05)
           {
-            vector<Int_t> num_comb_satis_row;
-            dups_count++;
-            num_satis.push_back(i);
+            // vector<Int_t> num_comb_satis_row;
+            // dups_count++;
+            num_satis.insert(i);
 
             if(dR_sum < dR_min){
               dR_min = dR_sum;
@@ -165,10 +161,10 @@ void MyTauClass::Loop()
               num_comb_min[1]=in.at(1);
               num_comb_min[2]=in.at(2);
             }
-            num_comb_satis_row.push_back(in.at(0));
-            num_comb_satis_row.push_back(in.at(1));
-            num_comb_satis_row.push_back(in.at(2));
-            num_comb_satis.push_back(num_comb_satis_row);
+            // num_comb_satis_row.push_back(in.at(0));
+            // num_comb_satis_row.push_back(in.at(1));
+            // num_comb_satis_row.push_back(in.at(2));
+            // num_comb_satis.push_back(num_comb_satis_row);
           }
         }
       }
@@ -194,8 +190,7 @@ void MyTauClass::Loop()
     pi_phi[0] = temp_transfer[0];
     pi_phi[1] = temp_transfer[1];
     pi_phi[2] = temp_transfer[2];
-
-    dups_count = (Int_t)num_satis.size();
+    dups_count = num_satis.size();
 
     if(JpsiTau_gen_tau_nprong->size()!=0 && int(JpsiTau_gen_tau_nprong->at(0) == 3))
     {
@@ -265,16 +260,21 @@ void MyTauClass::Loop()
           pi_flag = true; 
         else 
           pi_flag = false;
-        
-        for(const auto& pos: num_satis)
-        {
-          if(i == pos)
-          {
-            dup_flag = true;
-            break;
-          }
+        cout << "Num statis: " <<  num_satis.size() << endl;
+        if(num_satis.size()>0){
+            for(size_t pos: num_satis)
+            {
+	      cout << pos << endl;  
+              if(i == pos)
+              {
+		cout << "Entry: " << jentry << endl;
+		cout << "Out E: " << out_entry << endl;
+                dup_flag = true;
+                break;
+              } 
+           }
         }
-
+	out_entry++;
         tree1->Fill();
       }
     
@@ -306,7 +306,7 @@ void MyTauClass::Loop()
       }
     }
     
-    cout << "Duplicates: " << dups_count;
+    cout << "Duplicates: " << dups_count << endl;
   } // end loop on events
 
   FileOut->cd();

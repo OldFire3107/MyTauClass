@@ -18,6 +18,7 @@
 #include <iostream>
 
 // Header file for the classes stored in the TTree if any.
+#include <set>
 #include <vector>
 #include <map>
 #include <string>
