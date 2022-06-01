@@ -98,6 +98,31 @@ public :
    TBranch        *b_dup_flag;   //!
    TBranch        *b_dups_count;   //!
 
+   TString        FileNameIn;
+   TFile          *FileIn=NULL;
+   TFile          *FileOut=NULL;
+   Float_t        pir_pt[3];
+   Float_t        pir_eta[3];
+   Float_t        pir_phi[3];
+   Int_t          pir_q[3];
+   Float_t        pir_doca3d[3]; // same as doca, sry :)
+   Float_t        pir_doca3de[3];
+   Float_t        pir_dz[3];
+   Float_t        weighteddR;
+   Float_t        mpipi;
+   Float_t        mrho;
+   Float_t        deta12;
+   Float_t        dphi12;
+   Float_t        dR12;
+   Float_t        deta23;
+   Float_t        dphi23;
+   Float_t        dR23;
+   Float_t        deta31;
+   Float_t        dphi31;
+   Float_t        dR31;
+   Float_t        vis_mass;
+   TTree          *tree1 = NULL;
+
    TauMatch(TTree *tree=0);
    TauMatch(const char *file);
    virtual ~TauMatch();
@@ -105,6 +130,7 @@ public :
    virtual Int_t    GetEntry(Long64_t entry);
    virtual Long64_t LoadTree(Long64_t entry);
    virtual void     Init(TTree *tree);
+   virtual void     InitOut();
    virtual void     Loop();
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
@@ -117,14 +143,20 @@ public :
 #ifdef TauMatch_cxx
 TauMatch::TauMatch(TTree *tree) : fChain(0) 
 {
+   if(FileOut) delete FileOut;
+   FileOut = new TFile("vars.root", "RECREATE");
+   tree1=NULL;
+   InitOut();
+
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
    if (tree == 0) {
-      TFile *f = (TFile*)gROOT->GetListOfFiles()->FindObject("final.root");
-      if (!f || !f->IsOpen()) {
-         f = new TFile("final.root");
+      if(FileIn) delete FileIn;
+      FileIn = (TFile*)gROOT->GetListOfFiles()->FindObject("final.root");
+      if (!FileIn || !FileIn->IsOpen()) {
+         FileIn = new TFile("final.root");
       }
-      f->GetObject("triplet",tree);
+      FileIn->GetObject("triplet",tree);
 
    }
    Init(tree);
@@ -132,7 +164,14 @@ TauMatch::TauMatch(TTree *tree) : fChain(0)
 
 TauMatch::TauMatch(const char *file)
 {
-   TFile *FileIn = new TFile(file);
+   if(FileOut) delete FileOut;
+   FileOut = new TFile("vars.root", "RECREATE");
+   tree1=NULL;
+   InitOut();
+
+   if(FileIn) delete FileIn;
+   FileNameIn = file;
+   FileIn = new TFile(file);
    TTree *tree=NULL;
    FileIn->GetObject("triplet",tree);
 
@@ -141,8 +180,12 @@ TauMatch::TauMatch(const char *file)
 
 TauMatch::~TauMatch()
 {
-   if (!fChain) return;
-   delete fChain->GetCurrentFile();
+   delete tree1;
+   delete FileIn;
+   delete FileOut;
+
+   // if (!fChain) return;
+   // delete fChain->GetCurrentFile(); // seg fault sometimes since file already deleted
 }
 
 Int_t TauMatch::GetEntry(Long64_t entry)
@@ -162,6 +205,51 @@ Long64_t TauMatch::LoadTree(Long64_t entry)
       Notify();
    }
    return centry;
+}
+
+void TauMatch::InitOut()
+{
+   if (tree1) delete tree1;
+
+   tree1 = new TTree("data_vars","data_vars");
+   // TTree *tree1 = new TTree("reco_triplet","reco_triplet");
+   tree1->Branch("pi1r_pt", &pir_pt[0], "pi1r_pt/F");
+   tree1->Branch("pi2r_pt", &pir_pt[1], "pi2r_pt/F");
+   tree1->Branch("pi3r_pt", &pir_pt[2], "pi3r_pt/F");
+   tree1->Branch("pi1r_eta", &pir_eta[0], "pi1r_eta/F");
+   tree1->Branch("pi2r_eta", &pir_eta[1], "pi2r_eta/F");
+   tree1->Branch("pi3r_eta", &pir_eta[2], "pi3r_eta/F");
+   tree1->Branch("pi1r_phi", &pir_phi[0], "pi1r_phi/F");
+   tree1->Branch("pi2r_phi", &pir_phi[1], "pi2r_phi/F");
+   tree1->Branch("pi3r_phi", &pir_phi[2], "pi3r_phi/F");
+   tree1->Branch("pi1r_q", &pir_q[0], "pi1r_q/I");
+   tree1->Branch("pi2r_q", &pir_q[1], "pi2r_q/I");
+   tree1->Branch("pi3r_q", &pir_q[2], "pi3r_q/I");
+   tree1->Branch("pi1r_doca3d", &pir_doca3d[0], "pi1r_doca3d/F"); // Jbypsi vetrex to pion vertex
+   tree1->Branch("pi2r_doca3d", &pir_doca3d[1], "pi2r_doca3d/F");
+   tree1->Branch("pi3r_doca3d", &pir_doca3d[2], "pi3r_doca3d/F");
+   tree1->Branch("pi1r_doca3de", &pir_doca3de[0], "pi1r_doca3de/F"); // Jbypsi vetrex to pion vertex
+   tree1->Branch("pi2r_doca3de", &pir_doca3de[1], "pi2r_doca3de/F");
+   tree1->Branch("pi3r_doca3de", &pir_doca3de[2], "pi3r_doca3de/F");
+   tree1->Branch("pi1r_dz", &pir_dz[0], "pi1r_dz/F");
+   tree1->Branch("pi2r_dz", &pir_dz[1], "pi2r_dz/F");
+   tree1->Branch("pi3r_dz", &pir_dz[2], "pi3r_dz/F");
+   tree1->Branch("weighteddR", &weighteddR, "weighteddR/F");
+   tree1->Branch("mpipi", &mpipi, "mpipi/F");
+   tree1->Branch("mrho", &mrho, "mrho/F");
+   tree1->Branch("vis_mass", &vis_mass, "vis_mass/F");
+   tree1->Branch("deta12", &deta12, "deta12/F");
+   tree1->Branch("dphi12", &dphi12, "dphi12/F");
+   tree1->Branch("dR12", &dR12, "dR12/F");
+   tree1->Branch("deta23", &deta23, "deta23/F");
+   tree1->Branch("dphi23", &dphi23, "dphi23/F");
+   tree1->Branch("dR23", &dR23, "dR23/F");
+   tree1->Branch("deta31", &deta31, "deta31/F");
+   tree1->Branch("dphi31", &dphi31, "dphi31/F");
+   tree1->Branch("dR31", &dR31, "dR31/F");
+   tree1->Branch("flag", &flag, "flag/O");
+   tree1->Branch("dup_flag", &dup_flag, "dup_flag/O");
+   tree1->Branch("dups_count", &dups_count, "dups_count/I");
 }
 
 void TauMatch::Init(TTree *tree)

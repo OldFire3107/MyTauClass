@@ -127,13 +127,35 @@ void TauMatch::Loop()
       // sort(pi_pt, pi_pt+3);
       sort(pi_ptg, pi_ptg+3);
 
+      pir_pt[0] = pi1r_pt;
+      pir_pt[1] = pi2r_pt;
+      pir_pt[2] = pi3r_pt;
+      pir_eta[0] = pi1r_eta;
+      pir_eta[1] = pi2r_eta;
+      pir_eta[2] = pi3r_eta;
+      pir_phi[0] = pi1r_phi;
+      pir_phi[1] = pi2r_phi;
+      pir_phi[2] = pi3r_phi;
+      pir_q[0] = pi1r_q;
+      pir_q[1] = pi2r_q;
+      pir_q[2] = pi3r_q;
+      pir_doca3d[0] = pi1r_doca3d;
+      pir_doca3d[1] = pi2r_doca3d;
+      pir_doca3d[2] = pi3r_doca3d;
+      pir_doca3de[0] = pi1r_doca3de;
+      pir_doca3de[1] = pi2r_doca3de;
+      pir_doca3de[2] = pi3r_doca3de;
+      pir_dz[0] = pi1r_dz;
+      pir_dz[1] = pi2r_dz;
+      pir_dz[2] = pi3r_dz;
+
 
       TLorentzVector P[3];
       P[0].SetPtEtaPhiM(pi1r_pt, pi1r_eta, pi1r_phi, PI_MASS);
       P[1].SetPtEtaPhiM(pi2r_pt, pi2r_eta, pi2r_phi, PI_MASS);
       P[2].SetPtEtaPhiM(pi3r_pt, pi3r_eta, pi3r_phi, PI_MASS);
       TLorentzVector Invar = P[0] + P[1] + P[2];
-      Double_t vis_mass = Invar.M();
+      vis_mass = Invar.M();
       Double_t Pt_tot = Invar.Pt();
 
       Float_t dR_max = 0;
@@ -166,26 +188,22 @@ void TauMatch::Loop()
       Float_t b_eta_max = 0;
       Float_t b_phi_max = 0;
 
-      Float_t dr12, dr23, dr31;
-      Float_t deta12, deta23, deta31;
-      Float_t dphi12, dphi23, dphi31;
-
       dphi12 = deltaPhi(pi1r_phi, pi2r_phi);
       deta12 = abs(pi1r_eta - pi2r_eta);
-      dr12 = getDeltaR(pi1r_eta, pi1r_phi, pi2r_eta, pi2r_phi);
-      b_dr_max = dr12 > b_dr_max ? dr12 : b_dr_max;
+      dR12 = getDeltaR(pi1r_eta, pi1r_phi, pi2r_eta, pi2r_phi);
+      b_dr_max = dR12 > b_dr_max ? dR12 : b_dr_max;
       b_eta_max = deta12 > b_eta_max ? deta12 : b_eta_max;
       b_phi_max = dphi12 > b_phi_max ? dphi12 : b_phi_max;
       dphi23 = deltaPhi(pi3r_phi, pi2r_phi);
       deta23 = abs(pi3r_eta - pi2r_eta);
-      dr23 = getDeltaR(pi3r_eta, pi3r_phi, pi2r_eta, pi2r_phi);
-      b_dr_max = dr23 > b_dr_max ? dr23 : b_dr_max;
+      dR23 = getDeltaR(pi3r_eta, pi3r_phi, pi2r_eta, pi2r_phi);
+      b_dr_max = dR23 > b_dr_max ? dR23 : b_dr_max;
       b_eta_max = deta23 > b_eta_max ? deta23 : b_eta_max;
       b_phi_max = dphi23 > b_phi_max ? dphi23 : b_phi_max;
       dphi31 = deltaPhi(pi1r_phi, pi3r_phi);
       deta31 = abs(pi1r_eta - pi3r_eta);
-      dr31 = getDeltaR(pi1r_eta, pi1r_phi, pi3r_eta, pi3r_phi);
-      b_dr_max = dr31 > b_dr_max ? dr31 : b_dr_max;
+      dR31 = getDeltaR(pi1r_eta, pi1r_phi, pi3r_eta, pi3r_phi);
+      b_dr_max = dR31 > b_dr_max ? dR31 : b_dr_max;
       b_eta_max = deta31 > b_eta_max ? deta31 : b_eta_max;
       b_phi_max = dphi31 > b_phi_max ? dphi31 : b_phi_max;
 
@@ -194,14 +212,15 @@ void TauMatch::Loop()
       TLorentzVector P23 = P[1] + P[2];
       TLorentzVector P31 = P[2] + P[0];
 
-      Float_t weighteddR = dr12*P12.Pt() + dr23*P23.Pt() + dr31*P31.Pt();
+      weighteddR = dR12*P12.Pt() + dR23*P23.Pt() + dR31*P31.Pt();
       weighteddR /= 2*Pt_tot;
 
       Float_t mpipi12 = P12.M();
       Float_t mpipi23 = P23.M();
       Float_t mpipi31 = P31.M();
+      mpipi = mpipi12;
 
-      Float_t mrho, mindiff = 10;
+      Float_t mindiff = 10;
       if(abs(mindiff) > abs(mpipi12 - RHO_MASS) && pi1r_q * pi2r_q < 0) 
          mindiff = mpipi12 - RHO_MASS;
       if(abs(mindiff) > abs(mpipi23 - RHO_MASS) && pi2r_q * pi3r_q < 0) 
@@ -235,13 +254,13 @@ void TauMatch::Loop()
          h2drvsptsig->Fill(Pt_tot, b_dr_max);
          h2detavsptsig->Fill(Pt_tot, b_eta_max);
          h2dphivsptsig->Fill(Pt_tot, b_phi_max);
-         // h2dr12vsptsig->Fill(Pt_tot, dr12);
-         // h2dr23vsptsig->Fill(Pt_tot, dr23);
-         // h2dr31vsptsig->Fill(Pt_tot, dr31);
+         // h2dr12vsptsig->Fill(Pt_tot, dR12);
+         // h2dr23vsptsig->Fill(Pt_tot, dR23);
+         // h2dr31vsptsig->Fill(Pt_tot, dR31);
          h1weightpTdRsig->Fill(weighteddR);
          h1mrhosig->Fill(mrho);
          h1mpipisig->Fill(mpipi12);
-         h1drsig->Fill(dr12);
+         h1drsig->Fill(dR12);
          h1detasig->Fill(deta12);
          h1dphisig->Fill(dphi12);
          h1dzpi1sig->Fill(pi1r_dz);
@@ -262,9 +281,9 @@ void TauMatch::Loop()
          h2drvsptbg->Fill(Pt_tot, b_dr_max);
          h2detavsptbg->Fill(Pt_tot, b_eta_max);
          h2dphivsptbg->Fill(Pt_tot, b_phi_max);
-         // h2dr12vsptbg->Fill(Pt_tot, dr12);
-         // h2dr23vsptbg->Fill(Pt_tot, dr23);
-         // h2dr31vsptbg->Fill(Pt_tot, dr31);
+         // h2dr12vsptbg->Fill(Pt_tot, dR12);
+         // h2dr23vsptbg->Fill(Pt_tot, dR23);
+         // h2dr31vsptbg->Fill(Pt_tot, dR31);
          h1weightpTdRbg->Fill(weighteddR);
          h1mrhobg->Fill(mrho);
          if(pi1r_q == pi2r_q && pi2r_q == pi3r_q)
@@ -277,8 +296,11 @@ void TauMatch::Loop()
          h1dzpi1bg->Fill(pi1r_dz);
          h1doca3dpi1bg->Fill(pi1r_doca3d);
       }
+      
+      tree1->Fill();
    }
-
+   FileOut->cd();
+   tree1->Write();
 
 /// Ploting section
    TCanvas *can1 = new TCanvas("can1", "Ratios1_signbg_vis", 300,20,1000,750);
