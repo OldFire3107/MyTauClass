@@ -138,16 +138,18 @@ void MyTauClass::Loop()
           pi_flag = true;
           Float_t dR = 0;
           Float_t dR_sum = 0;
+          Float_t pT_res = 0; // for very rare cases
           for(int j=0; j < 3; j++)
           {
+            pT_res += abs(pi_pt[in.at(j)] - pir_pt[j])/pi_pt[in.at(j)];
             dR = getDeltaR(pi_eta[in.at(j)], pi_phi[in.at(j)], pir_eta[j], pir_phi[j]);
             dR_sum += dR;
-            if (dR > 0.05)
+            if (dR > 0.05 || pT_res > 0.2)
             {
               break;
             }
           }
-          if(dR_sum < 0.05)
+          if(dR_sum < 0.05 && pT_res < 0.2)
           {
             // vector<Int_t> num_comb_satis_row;
             // dups_count++;
@@ -264,17 +266,17 @@ void MyTauClass::Loop()
         if(num_satis.size()>0){
             for(size_t pos: num_satis)
             {
-	      cout << pos << endl;  
+	            cout << pos << endl;  
               if(i == pos)
               {
-		cout << "Entry: " << jentry << endl;
-		cout << "Out E: " << out_entry << endl;
+                cout << "Entry: " << jentry << endl;
+                cout << "Out E: " << out_entry << endl;
                 dup_flag = true;
                 break;
               } 
            }
         }
-	out_entry++;
+	      out_entry++;
         tree1->Fill();
       }
     
