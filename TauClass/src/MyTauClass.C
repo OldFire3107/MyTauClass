@@ -219,6 +219,12 @@ void MyTauClass::Loop()
         pir_doca3de[0] = JpsiTau_tau_pi1_doca3de->at(i);
         pir_doca3de[1] = JpsiTau_tau_pi2_doca3de->at(i);
         pir_doca3de[2] = JpsiTau_tau_pi3_doca3de->at(i);
+        pir_doca2d[0] = JpsiTau_tau_pi1_doca2d->at(i);
+        pir_doca2d[1] = JpsiTau_tau_pi2_doca2d->at(i);
+        pir_doca2d[2] = JpsiTau_tau_pi3_doca2d->at(i);
+        pir_doca2de[0] = JpsiTau_tau_pi1_doca2de->at(i);
+        pir_doca2de[1] = JpsiTau_tau_pi2_doca2de->at(i);
+        pir_doca2de[2] = JpsiTau_tau_pi3_doca2de->at(i);
         pir_dz[0] = JpsiTau_tau_pi1_dz->at(i);
         pir_dz[1] = JpsiTau_tau_pi1_dz->at(i);
         pir_dz[2] = JpsiTau_tau_pi1_dz->at(i);

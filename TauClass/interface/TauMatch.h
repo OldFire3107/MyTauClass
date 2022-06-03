@@ -27,6 +27,8 @@ public :
 // Fixed size dimensions of array or collections stored in the TTree if any.
 
    // Declaration of leaf types
+   Long64_t         evt;
+   Long64_t         run;
    Float_t         pi1_pt;
    Float_t         pi2_pt;
    Float_t         pi3_pt;
@@ -55,6 +57,12 @@ public :
    Float_t         pi1r_doca3de;
    Float_t         pi2r_doca3de;
    Float_t         pi3r_doca3de;
+   Float_t         pi1r_doca2d;
+   Float_t         pi2r_doca2d;
+   Float_t         pi3r_doca2d;
+   Float_t         pi1r_doca2de;
+   Float_t         pi2r_doca2de;
+   Float_t         pi3r_doca2de;
    Float_t         pi1r_dz;
    Float_t         pi2r_dz;
    Float_t         pi3r_dz;
@@ -91,6 +99,12 @@ public :
    TBranch        *b_pi1r_doca3de;   //!
    TBranch        *b_pi2r_doca3de;   //!
    TBranch        *b_pi3r_doca3de;   //!
+   TBranch        *b_pi1r_doca2d;   //!
+   TBranch        *b_pi2r_doca2d;   //!
+   TBranch        *b_pi3r_doca2d;   //!
+   TBranch        *b_pi1r_doca2de;   //!
+   TBranch        *b_pi2r_doca2de;   //!
+   TBranch        *b_pi3r_doca2de;   //!
    TBranch        *b_pi1r_dz;   //!
    TBranch        *b_pi2r_dz;   //!
    TBranch        *b_pi3r_dz;   //!
@@ -107,6 +121,9 @@ public :
    Int_t          pir_q[3];
    Float_t        pir_doca3d[3]; // same as doca, sry :)
    Float_t        pir_doca3de[3];
+   Float_t        pir_doca2d[3]; // same as doca, sry :)
+   Float_t        pir_doca2de[3];
+   Float_t        pir_doca2ds[3];
    Float_t        pir_dz[3];
    Float_t        weighteddR;
    Float_t        mpipi;
@@ -121,6 +138,7 @@ public :
    Float_t        dphi31;
    Float_t        dR31;
    Float_t        vis_mass;
+   Float_t        w_1;
    TTree          *tree1 = NULL;
 
    TauMatch(TTree *tree=0);
@@ -213,6 +231,8 @@ void TauMatch::InitOut()
 
    tree1 = new TTree("data_vars","data_vars");
    // TTree *tree1 = new TTree("reco_triplet","reco_triplet");
+   tree1->Branch("evt", &evt, "evt/L");
+   tree1->Branch("run", &run, "run/L");
    tree1->Branch("pi1r_pt", &pir_pt[0], "pi1r_pt/F");
    tree1->Branch("pi2r_pt", &pir_pt[1], "pi2r_pt/F");
    tree1->Branch("pi3r_pt", &pir_pt[2], "pi3r_pt/F");
@@ -231,6 +251,15 @@ void TauMatch::InitOut()
    tree1->Branch("pi1r_doca3de", &pir_doca3de[0], "pi1r_doca3de/F"); // Jbypsi vetrex to pion vertex
    tree1->Branch("pi2r_doca3de", &pir_doca3de[1], "pi2r_doca3de/F");
    tree1->Branch("pi3r_doca3de", &pir_doca3de[2], "pi3r_doca3de/F");
+   tree1->Branch("pi1r_doca2d", &pir_doca2d[0], "pi1r_doca2d/F"); // Jbypsi vetrex to pion vertex
+   tree1->Branch("pi2r_doca2d", &pir_doca2d[1], "pi2r_doca2d/F");
+   tree1->Branch("pi3r_doca2d", &pir_doca2d[2], "pi3r_doca2d/F");
+   tree1->Branch("pi1r_doca2de", &pir_doca2de[0], "pi1r_doca2de/F"); // Jbypsi vetrex to pion vertex
+   tree1->Branch("pi2r_doca2de", &pir_doca2de[1], "pi2r_doca2de/F");
+   tree1->Branch("pi3r_doca2de", &pir_doca2de[2], "pi3r_doca2de/F");
+   tree1->Branch("pi1r_doca2ds", &pir_doca2ds[0], "pi1r_doca2ds/F"); // Jbypsi vetrex to pion vertex
+   tree1->Branch("pi2r_doca2ds", &pir_doca2ds[1], "pi2r_doca2ds/F");
+   tree1->Branch("pi3r_doca2ds", &pir_doca2ds[2], "pi3r_doca2ds/F");
    tree1->Branch("pi1r_dz", &pir_dz[0], "pi1r_dz/F");
    tree1->Branch("pi2r_dz", &pir_dz[1], "pi2r_dz/F");
    tree1->Branch("pi3r_dz", &pir_dz[2], "pi3r_dz/F");
@@ -250,6 +279,7 @@ void TauMatch::InitOut()
    tree1->Branch("flag", &flag, "flag/O");
    tree1->Branch("dup_flag", &dup_flag, "dup_flag/O");
    tree1->Branch("dups_count", &dups_count, "dups_count/I");
+   tree1->Branch("w_1", &w_1, "w_1/F");
 }
 
 void TauMatch::Init(TTree *tree)
@@ -296,6 +326,12 @@ void TauMatch::Init(TTree *tree)
    fChain->SetBranchAddress("pi1r_doca3de", &pi1r_doca3de, &b_pi1r_doca3de);
    fChain->SetBranchAddress("pi2r_doca3de", &pi2r_doca3de, &b_pi2r_doca3de);
    fChain->SetBranchAddress("pi3r_doca3de", &pi3r_doca3de, &b_pi3r_doca3de);
+   fChain->SetBranchAddress("pi1r_doca2d", &pi1r_doca2d, &b_pi1r_doca2d);
+   fChain->SetBranchAddress("pi2r_doca2d", &pi2r_doca2d, &b_pi2r_doca2d);
+   fChain->SetBranchAddress("pi3r_doca2d", &pi3r_doca2d, &b_pi3r_doca2d);
+   fChain->SetBranchAddress("pi1r_doca2de", &pi1r_doca2de, &b_pi1r_doca2de);
+   fChain->SetBranchAddress("pi2r_doca2de", &pi2r_doca2de, &b_pi2r_doca2de);
+   fChain->SetBranchAddress("pi3r_doca2de", &pi3r_doca2de, &b_pi3r_doca2de);
    fChain->SetBranchAddress("pi1r_dz", &pi1r_dz, &b_pi1r_dz);
    fChain->SetBranchAddress("pi2r_dz", &pi2r_dz, &b_pi2r_dz);
    fChain->SetBranchAddress("pi3r_dz", &pi3r_dz, &b_pi3r_dz);

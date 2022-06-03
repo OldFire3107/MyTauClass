@@ -85,8 +85,24 @@ void TauMatch::Loop()
 
    TH1F *h1dzpi1sig = new TH1F("h1dzpi1sig", "dz pi1 matched", 30, -0.05, 0.05);
    TH1F *h1dzpi1bg = new TH1F("h1dzpi1bg", "dz pi1 unmatched", 30, -0.05, 0.05);
-   TH1F *h1doca3dpi1sig = new TH1F("h1doca3dpi1sig", "doca3d pi1 matched", 30, -0.05, 0.05);
-   TH1F *h1doca3dpi1bg = new TH1F("h1doca3dpi1bg", "doca3d pi1 unmatched", 30, -0.05, 0.05);
+
+   TH1F *h1doca2dpi1sig = new TH1F("h1doca2dpi1sig", "doca2d pi1 matched", 30, -0.05, 0.05);
+   TH1F *h1doca2dpi1bg = new TH1F("h1doca2dpi1bg", "doca2d pi1 unmatched", 30, -0.05, 0.05);
+
+   TH1F *h1doca2dpi2sig = new TH1F("h1doca2dpi2sig", "doca2d pi2 matched", 30, -0.05, 0.05);
+   TH1F *h1doca2dpi2bg = new TH1F("h1doca2dpi2bg", "doca2d pi2 unmatched", 30, -0.05, 0.05);
+
+   TH1F *h1doca2dpi3sig = new TH1F("h1doca2dpi3sig", "doca2d pi3 matched", 30, -0.05, 0.05);
+   TH1F *h1doca2dpi3bg = new TH1F("h1doca2dpi3bg", "doca2d pi3 unmatched", 30, -0.05, 0.05);
+
+   TH1F *h1doca2dspi1sig = new TH1F("h1doca2dspi1sig", "doca2ds pi1 matched", 30, 0, 10);
+   TH1F *h1doca2dspi1bg = new TH1F("h1doca2dspi1bg", "doca2ds pi1 unmatched", 30, 0, 10);
+
+   TH1F *h1doca2dspi2sig = new TH1F("h1doca2dspi2sig", "doca2ds pi2 matched", 30, 0, 10);
+   TH1F *h1doca2dspi2bg = new TH1F("h1doca2dspi2bg", "doca2ds pi2 unmatched", 30, 0, 10);
+
+   TH1F *h1doca2dspi3sig = new TH1F("h1doca2dspi3sig", "doca2ds pi3 matched", 30, 0, 10);
+   TH1F *h1doca2dspi3bg = new TH1F("h1doca2dspi3bg", "doca2ds pi3 unmatched", 30, 0, 10);
 
    TH2F *h2drvsptsig = new TH2F("h2drvsptsignal", "dr vs pt signal", 50, 1, 10, 25, 0, 2);
    TH2F *h2drvsptbg = new TH2F("h2drvsptbg", "dr vs pt bg", 50, 1, 10, 25, 0, 2);
@@ -145,9 +161,21 @@ void TauMatch::Loop()
       pir_doca3de[0] = pi1r_doca3de;
       pir_doca3de[1] = pi2r_doca3de;
       pir_doca3de[2] = pi3r_doca3de;
+      pir_doca2d[0] = pi1r_doca2d;
+      pir_doca2d[1] = pi2r_doca2d;
+      pir_doca2d[2] = pi3r_doca2d;
+      pir_doca2de[0] = pi1r_doca2de;
+      pir_doca2de[1] = pi2r_doca2de;
+      pir_doca2de[2] = pi3r_doca2de;
+      pir_doca2ds[0] = pi1r_doca2d == 0 || pi1r_doca2de != pi1r_doca2de ? 0 : abs(pi1r_doca2d/pi1r_doca2de);
+      pir_doca2ds[1] = pi2r_doca2d == 0 || pi2r_doca2de != pi2r_doca2de ? 0 : abs(pi2r_doca2d/pi2r_doca2de);
+      pir_doca2ds[2] = pi3r_doca2d == 0 || pi3r_doca2de != pi3r_doca2de ? 0 : abs(pi3r_doca2d/pi3r_doca2de);
       pir_dz[0] = pi1r_dz;
       pir_dz[1] = pi2r_dz;
       pir_dz[2] = pi3r_dz;
+      w_1 = 1.0;
+      run = 0;
+      evt = jentry;
 
 
       TLorentzVector P[3];
@@ -230,7 +258,7 @@ void TauMatch::Loop()
 
       mrho = mindiff + RHO_MASS;
    
-      if(flag)
+      if(dup_flag)
       {
          h1ratiosig1->Fill(pi_pt[0]/Pt_tot);
          h1ratiosig2->Fill(pi_pt[1]/Pt_tot);
@@ -264,7 +292,12 @@ void TauMatch::Loop()
          h1detasig->Fill(deta12);
          h1dphisig->Fill(dphi12);
          h1dzpi1sig->Fill(pi1r_dz);
-         h1doca3dpi1sig->Fill(pi1r_doca3d);
+         h1doca2dpi1sig->Fill(pi1r_doca2d);
+         h1doca2dpi2sig->Fill(pi2r_doca2d);
+         h1doca2dpi3sig->Fill(pi3r_doca2d);
+         h1doca2dspi1sig->Fill(pir_doca2ds[0]);
+         h1doca2dspi2sig->Fill(pir_doca2ds[1]);
+         h1doca2dspi3sig->Fill(pir_doca2ds[2]);
       }
       else
       {
@@ -294,7 +327,12 @@ void TauMatch::Loop()
          h1detabg->Fill(b_eta_max);
          h1dphibg->Fill(b_phi_max);
          h1dzpi1bg->Fill(pi1r_dz);
-         h1doca3dpi1bg->Fill(pi1r_doca3d);
+         h1doca2dpi1bg->Fill(pi1r_doca2d);
+         h1doca2dpi2bg->Fill(pi2r_doca2d);
+         h1doca2dpi3bg->Fill(pi3r_doca2d);
+         h1doca2dspi1bg->Fill(pir_doca2ds[0]);
+         h1doca2dspi2bg->Fill(pir_doca2ds[1]);
+         h1doca2dspi3bg->Fill(pir_doca2ds[2]);
       }
       
       tree1->Fill();
@@ -479,13 +517,53 @@ void TauMatch::Loop()
    h1dzpi1bg->Draw();
    can22->SaveAs("dz.pdf");
 
-   TCanvas *can23 = new TCanvas("can23", "doca3d", 300,20,1000,750);
+   TCanvas *can23 = new TCanvas("can23", "doca2d pi1", 300,20,1000,750);
    can23->Divide(1,2);
    can23->cd(1);
-   h1doca3dpi1sig->Draw();
+   h1doca2dpi1sig->Draw();
    can23->cd(2);
-   h1doca3dpi1bg->Draw();
-   can23->SaveAs("doca3d.pdf");
+   h1doca2dpi1bg->Draw();
+   can23->SaveAs("doca2d.pdf");
+
+   TCanvas *can24 = new TCanvas("can24", "doca2d pi2", 300,20,1000,750);
+   can24->Divide(1,2);
+   can24->cd(1);
+   h1doca2dpi2sig->Draw();
+   can24->cd(2);
+   h1doca2dpi2bg->Draw();
+   can24->SaveAs("doca2d2.pdf");
+
+   TCanvas *can25 = new TCanvas("can25", "doca2d pi3", 300,20,1000,750);
+   can25->Divide(1,2);
+   can25->cd(1);
+   h1doca2dpi3sig->Draw();
+   can25->cd(2);
+   h1doca2dpi3bg->Draw();
+   can25->SaveAs("doca2d3.pdf");
+
+   TCanvas *can26 = new TCanvas("can26", "doca2ds pi1", 300,20,1000,750);
+   can26->Divide(1,2);
+   can26->cd(1);
+   h1doca2dspi1sig->Draw();
+   can26->cd(2);
+   h1doca2dspi1bg->Draw();
+   can26->SaveAs("doca2ds1.pdf");
+
+   TCanvas *can27 = new TCanvas("can27", "doca2ds pi2", 300,20,1000,750);
+   can27->Divide(1,2);
+   can27->cd(1);
+   h1doca2dspi2sig->Draw();
+   can27->cd(2);
+   h1doca2dspi2bg->Draw();
+   can27->SaveAs("doca2ds2.pdf");
+
+   TCanvas *can28 = new TCanvas("can28", "doca2ds pi3", 300,20,1000,750);
+   can28->Divide(1,2);
+   can28->cd(1);
+   h1doca2dspi3sig->Draw();
+   can28->cd(2);
+   h1doca2dspi3bg->Draw();
+   can28->SaveAs("doca2ds3.pdf");
 }
 
 float TauMatch::deltaPhi(float phi1, float phi2) {
