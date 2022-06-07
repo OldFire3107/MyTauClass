@@ -876,6 +876,7 @@ public :
    Float_t        tau_true_pt;
    Bool_t         pi_flag;
    Bool_t         dup_flag;
+   Bool_t         isSignal[3];
    Int_t          dups_count;
    TTree          *tree1 = NULL;
 
@@ -923,6 +924,7 @@ public :
    virtual void     Show(Long64_t entry = -1);
    virtual void     SwapValue(Float_t &a, Float_t &b);
    virtual void     SwapValue(Int_t &a, Int_t &b);
+   virtual void     SwapValue(Bool_t &a, Bool_t &b);
    virtual void     CombAdd(vector<vector<Int_t>>& comb, Int_t arr[3], int n);
    virtual float    deltaPhi(float phi1, float phi2);
    virtual Float_t  getDeltaR(Float_t eta1, Float_t phi1, Float_t eta2, Float_t phi2);
@@ -1069,6 +1071,9 @@ void MyTauClass::InitOut()
    tree1->Branch("pi1r_dz", &pir_dz[0], "pi1r_dz/F");
    tree1->Branch("pi2r_dz", &pir_dz[1], "pi2r_dz/F");
    tree1->Branch("pi3r_dz", &pir_dz[2], "pi3r_dz/F");
+   tree1->Branch("isSignal1", &isSignal[0], "isSignal1/O");
+   tree1->Branch("isSignal2", &isSignal[1], "isSignal2/O");
+   tree1->Branch("isSignal3", &isSignal[2], "isSignal3/O");
    tree1->Branch("flag", &pi_flag, "flag/O");
    tree1->Branch("dup_flag", &dup_flag, "dup_flag/O");
    tree1->Branch("dups_count", &dups_count, "dups_count/I");

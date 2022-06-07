@@ -185,6 +185,18 @@ void TauMatch::Loop()
       TLorentzVector Invar = P[0] + P[1] + P[2];
       vis_mass = Invar.M();
       Double_t Pt_tot = Invar.Pt();
+      Double_t EtaM = Invar.Eta();
+      Double_t PhiM = Invar.Phi();
+
+      pir_deta[0] = abs(EtaM-pi1r_eta);
+      pir_deta[1] = abs(EtaM-pi2r_eta);
+      pir_deta[2] = abs(EtaM-pi3r_eta);
+      pir_dphi[0] = deltaPhi(PhiM, pi1r_phi);
+      pir_dphi[1] = deltaPhi(PhiM, pi2r_phi);
+      pir_dphi[2] = deltaPhi(PhiM, pi3r_phi);
+      pir_dR[0] = getDeltaR(EtaM, PhiM, pi1r_eta, pi1r_phi);
+      pir_dR[1] = getDeltaR(EtaM, PhiM, pi2r_eta, pi2r_phi);
+      pir_dR[2] = getDeltaR(EtaM, PhiM, pi3r_eta, pi3r_phi);
 
       Float_t dR_max = 0;
       Float_t deta_max = 0;

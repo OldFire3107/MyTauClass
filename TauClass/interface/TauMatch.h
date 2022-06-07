@@ -66,6 +66,9 @@ public :
    Float_t         pi1r_dz;
    Float_t         pi2r_dz;
    Float_t         pi3r_dz;
+   Bool_t          isSignal1;
+   Bool_t          isSignal2;
+   Bool_t          isSignal3;
    Bool_t          flag;
    Bool_t          dup_flag;
    Int_t           dups_count;
@@ -108,6 +111,9 @@ public :
    TBranch        *b_pi1r_dz;   //!
    TBranch        *b_pi2r_dz;   //!
    TBranch        *b_pi3r_dz;   //!
+   TBranch        *b_isSignal1;   //!
+   TBranch        *b_isSignal2;   //!
+   TBranch        *b_isSignal3;   //!
    TBranch        *b_flag;   //!
    TBranch        *b_dup_flag;   //!
    TBranch        *b_dups_count;   //!
@@ -125,6 +131,9 @@ public :
    Float_t        pir_doca2de[3];
    Float_t        pir_doca2ds[3];
    Float_t        pir_dz[3];
+   Float_t        pir_deta[3];
+   Float_t        pir_dphi[3];
+   Float_t        pir_dR[3];
    Float_t        weighteddR;
    Float_t        mpipi;
    Float_t        mrho;
@@ -263,6 +272,15 @@ void TauMatch::InitOut()
    tree1->Branch("pi1r_dz", &pir_dz[0], "pi1r_dz/F");
    tree1->Branch("pi2r_dz", &pir_dz[1], "pi2r_dz/F");
    tree1->Branch("pi3r_dz", &pir_dz[2], "pi3r_dz/F");
+   tree1->Branch("pi1r_deta", &pir_deta[0], "pi1r_deta/F");
+   tree1->Branch("pi2r_deta", &pir_deta[1], "pi2r_deta/F");
+   tree1->Branch("pi3r_deta", &pir_deta[2], "pi3r_deta/F");
+   tree1->Branch("pi1r_dphi", &pir_dphi[0], "pi1r_dphi/F");
+   tree1->Branch("pi2r_dphi", &pir_dphi[1], "pi2r_dphi/F");
+   tree1->Branch("pi3r_dphi", &pir_dphi[2], "pi3r_dphi/F");
+   tree1->Branch("pi1r_dR", &pir_dR[0], "pi1r_dR/F");
+   tree1->Branch("pi2r_dR", &pir_dR[1], "pi2r_dR/F");
+   tree1->Branch("pi3r_dR", &pir_dR[2], "pi3r_dR/F");
    tree1->Branch("weighteddR", &weighteddR, "weighteddR/F");
    tree1->Branch("mpipi", &mpipi, "mpipi/F");
    tree1->Branch("mrho", &mrho, "mrho/F");
@@ -335,6 +353,9 @@ void TauMatch::Init(TTree *tree)
    fChain->SetBranchAddress("pi1r_dz", &pi1r_dz, &b_pi1r_dz);
    fChain->SetBranchAddress("pi2r_dz", &pi2r_dz, &b_pi2r_dz);
    fChain->SetBranchAddress("pi3r_dz", &pi3r_dz, &b_pi3r_dz);
+   fChain->SetBranchAddress("isSignal1", &isSignal1, &b_isSignal1);
+   fChain->SetBranchAddress("isSignal2", &isSignal2, &b_isSignal2);
+   fChain->SetBranchAddress("isSignal3", &isSignal3, &b_isSignal3);
    fChain->SetBranchAddress("flag", &flag, &b_flag);
    fChain->SetBranchAddress("dup_flag", &dup_flag, &b_dup_flag);
    fChain->SetBranchAddress("dups_count", &dups_count, &b_dups_count);

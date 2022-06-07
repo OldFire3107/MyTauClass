@@ -228,6 +228,9 @@ void MyTauClass::Loop()
         pir_dz[0] = JpsiTau_tau_pi1_dz->at(i);
         pir_dz[1] = JpsiTau_tau_pi1_dz->at(i);
         pir_dz[2] = JpsiTau_tau_pi1_dz->at(i);
+        isSignal[0] = JpsiTau_tau_pi1_isSignal->at(i);
+        isSignal[1] = JpsiTau_tau_pi2_isSignal->at(i);
+        isSignal[2] = JpsiTau_tau_pi3_isSignal->at(i);
         dup_flag = false;
 
         // To Do to sort all var in order of pirpt
@@ -242,6 +245,10 @@ void MyTauClass::Loop()
           SwapValue(pir_q[0], pir_q[1]);
           SwapValue(pir_dce3d[0], pir_dce3d[1]);
           SwapValue(pir_dz[0], pir_dz[1]);
+          SwapValue(pir_doca3de[0], pir_doca3de[1]);
+          SwapValue(pir_doca2de[0], pir_doca2de[1]);
+          SwapValue(pir_doca2d[0], pir_doca2d[1]);
+          SwapValue(isSignal[0], isSignal[1]);
         }
         if (pir_pt[0] < pir_pt[2])
         {
@@ -254,6 +261,10 @@ void MyTauClass::Loop()
           SwapValue(pir_q[0], pir_q[2]);
           SwapValue(pir_dce3d[0], pir_dce3d[2]);
           SwapValue(pir_dz[0], pir_dz[2]);
+          SwapValue(pir_doca3de[0], pir_doca3de[2]);
+          SwapValue(pir_doca2de[0], pir_doca2de[2]);
+          SwapValue(pir_doca2d[0], pir_doca2d[2]);
+          SwapValue(isSignal[0], isSignal[2]);
         }
         if (pir_pt[1] < pir_pt[2])
         {
@@ -266,6 +277,10 @@ void MyTauClass::Loop()
           SwapValue(pir_q[1], pir_q[2]);
           SwapValue(pir_dce3d[1], pir_dce3d[2]);
           SwapValue(pir_dz[1], pir_dz[2]);
+          SwapValue(pir_doca3de[1], pir_doca3de[2]);
+          SwapValue(pir_doca2de[1], pir_doca2de[2]);
+          SwapValue(pir_doca2d[1], pir_doca2d[2]);
+          SwapValue(isSignal[1], isSignal[2]);
         }
 
         if(i == min_pos)
@@ -560,6 +575,13 @@ void MyTauClass::SwapValue(Float_t &a, Float_t &b)
 void MyTauClass::SwapValue(Int_t &a, Int_t &b) 
 {
   Int_t t = a;
+  a = b;
+  b = t;
+}
+
+void MyTauClass::SwapValue(Bool_t &a, Bool_t &b) 
+{
+  Bool_t t = a;
   a = b;
   b = t;
 }
