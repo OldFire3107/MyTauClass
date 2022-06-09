@@ -176,7 +176,7 @@ void TauMatch::Loop()
       w_1 = 1.0;
       run = 0;
       evt = jentry;
-
+      baseline_pred = false;
 
       TLorentzVector P[3];
       P[0].SetPtEtaPhiM(pi1r_pt, pi1r_eta, pi1r_phi, PI_MASS);
@@ -247,7 +247,6 @@ void TauMatch::Loop()
       b_eta_max = deta31 > b_eta_max ? deta31 : b_eta_max;
       b_phi_max = dphi31 > b_phi_max ? dphi31 : b_phi_max;
 
-
       TLorentzVector P12 = P[0] + P[1];
       TLorentzVector P23 = P[1] + P[2];
       TLorentzVector P31 = P[2] + P[0];
@@ -269,7 +268,26 @@ void TauMatch::Loop()
          mindiff = mpipi31 - RHO_MASS;
 
       mrho = mindiff + RHO_MASS;
-   
+
+
+      if(weighteddR < 0.5 && dR12 < 0.5 && pi1r_pt > 3.5)
+      {
+         if(pi1r_doca3d > 0 && pi2r_doca3d > 0 && pi3r_doca3d > 0)
+         {
+            if((mrho - RHO_MASS) < 0.15 && (vis_mass - A1_MASS + 0.05) <  0.3)
+            {
+               baseline_pred = true;
+            }
+         }
+         else
+         {
+            if((mrho - RHO_MASS) < 0.1 && (vis_mass - A1_MASS + 0.05) <  0.2)
+            {
+               baseline_pred = true;
+            }
+         }
+      }
+      
       if(dup_flag)
       {
          h1ratiosig1->Fill(pi_pt[0]/Pt_tot);

@@ -10,6 +10,7 @@
 
 #define PI_MASS 0.1396 // GeV
 #define RHO_MASS 0.77 // GeV
+#define A1_MASS 1.23 // GeV
 
 #include <TROOT.h>
 #include <TChain.h>
@@ -148,6 +149,7 @@ public :
    Float_t        dR31;
    Float_t        vis_mass;
    Float_t        w_1;
+   Bool_t         baseline_pred;
    TTree          *tree1 = NULL;
 
    TauMatch(TTree *tree=0);
@@ -296,6 +298,7 @@ void TauMatch::InitOut()
    tree1->Branch("dR31", &dR31, "dR31/F");
    tree1->Branch("flag", &flag, "flag/O");
    tree1->Branch("dup_flag", &dup_flag, "dup_flag/O");
+   tree1->Branch("baseline_pred", &baseline_pred, "baseline_pred/O");
    tree1->Branch("dups_count", &dups_count, "dups_count/I");
    tree1->Branch("w_1", &w_1, "w_1/F");
 }
