@@ -244,6 +244,15 @@ void TauMatch::InitOut()
    // TTree *tree1 = new TTree("reco_triplet","reco_triplet");
    tree1->Branch("evt", &evt, "evt/L");
    tree1->Branch("run", &run, "run/L");
+   tree1->Branch("pi1_pt", &pi1_pt, "pi1_pt/F");
+   tree1->Branch("pi2_pt", &pi2_pt, "pi2_pt/F");
+   tree1->Branch("pi3_pt", &pi3_pt, "pi3_pt/F");
+   tree1->Branch("pi1_eta", &pi1_eta, "pi1_eta/F");
+   tree1->Branch("pi2_eta", &pi2_eta, "pi2_eta/F");
+   tree1->Branch("pi3_eta", &pi3_eta, "pi3_eta/F");
+   tree1->Branch("pi1_phi", &pi1_phi, "pi1_phi/F");
+   tree1->Branch("pi2_phi", &pi2_phi, "pi2_phi/F");
+   tree1->Branch("pi3_phi", &pi3_phi, "pi3_phi/F");
    tree1->Branch("pi1r_pt", &pir_pt[0], "pi1r_pt/F");
    tree1->Branch("pi2r_pt", &pir_pt[1], "pi2r_pt/F");
    tree1->Branch("pi3r_pt", &pir_pt[2], "pi3r_pt/F");
