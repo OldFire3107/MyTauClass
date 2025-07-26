@@ -388,7 +388,7 @@ Bool_t TauMatch::Notify()
 void TauMatch::Show(Long64_t entry)
 {
 // Print contents of entry.
-// If entry is not specified, print current entry
+// If entry is not specified, print the current entry.
    if (!fChain) return;
    fChain->Show(entry);
 }
